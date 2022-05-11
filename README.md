@@ -11,6 +11,12 @@
 - MyBatis
 - MySQL
 
+## 개발 규칙
+
+- [Java Coding Convention](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki/3.Convention#java-coding-convention)
+- [Git Branch 전략](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki/3.Convention#git-branch-%EC%A0%84%EB%9E%B5)
+- [Git Commit Message Convention](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki/3.Convention#commit-message-convention)
+
 ## 주요 기능
 
 - [기능 정리](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki#2-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C)
