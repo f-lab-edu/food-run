@@ -20,6 +20,6 @@
 
 ## 주요 기능
 
-- [기능 정리](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki#2-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C)
-- [유스케이스](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki/Use-Case)
+- [기능 정리](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki/1.Home#2-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C)
+- [유스케이스](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki/2.Use-Case)
 
