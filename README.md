@@ -16,6 +16,7 @@
 - [Java Coding Convention](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki/3.Convention#java-coding-convention)
 - [Git Branch 전략](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki/3.Convention#git-branch-%EC%A0%84%EB%9E%B5)
 - [Git Commit Message Convention](https://github.com/f-lab-edu/food-delivery-subscription-service/wiki/3.Convention#commit-message-convention)
+- 목표 테스트 커버리지 : 70%
 
 ## 주요 기능
 
