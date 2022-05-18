@@ -1,0 +1,13 @@
+# DB Connection Configuration
+
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/devdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  flyway:
+    baseline-version: 1
+    enabled: true
+    encoding: utf-8
+    baseline-on-migrate: true
