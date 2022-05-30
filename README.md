@@ -24,7 +24,6 @@
 - [유스케이스](https://github.com/f-lab-edu/food-run/wiki/2.Use-Case)
 
 ## ERD
-- [ERD - dbdiagram.io](https://dbdiagram.io/d/627e692a7f945876b61451b4)
+- [ERD 원본 - dbdiagram.io](https://dbdiagram.io/d/627e692a7f945876b61451b4)
 
-![](https://velog.velcdn.com/images/dailyzett/post/7ca9cd3a-ac26-4f06-8115-f9b1dbb27156/image.png)
-
+![](ERD.png)
