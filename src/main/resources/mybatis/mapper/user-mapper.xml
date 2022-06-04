@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flab.foodrun.domain.user.dao.UserMapper">
+  <insert id="add" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO user(
+        login_id,
+        password,
+        name,
+        role,
+        status,
+        phone_number,
+        email,
+        created_at,
+        created_by
+    ) VALUES (
+        #{loginId},
+        #{password},
+        #{name},
+        #{role},
+        #{status},
+        #{phoneNumber},
+        #{email},
+        NOW(),
+        #{createdBy}
+    )
+  </insert>
+
+  <select id="findByLoginId" resultType="int">
+    SELECT id FROM user WHERE login_id = #{loginId}
+  </select>
+
+  <select id="countAll" resultType="int">
+    SELECT COUNT(*) FROM user;
+  </select>
+</mapper>
