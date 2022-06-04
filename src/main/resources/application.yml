@@ -1,6 +1,7 @@
 # DB Connection Configuration
 
 # 1. flyway + h2
+# 클라우드 사용으로 인한 주석 처리
 
 #spring:
 #  datasource:
@@ -19,6 +20,12 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: db-ajvuv.pub-cdb.ntruss.com
+    url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db
     username: mysql_dba
     password: foodrun2*
+
+
+# 3. MyBatis Config
+
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
