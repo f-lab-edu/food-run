@@ -24,8 +24,8 @@ spring:
     username: mysql_dba
     password: foodrun2*
 
-
 # 3. MyBatis Config
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
+
