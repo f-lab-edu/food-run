@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserMapper {
-	void add(User user);
-	int findByLoginId(String loginId);
-	int countAll();
+	int insertUser(User user);
+	int countByLoginId(String loginId);
 }
