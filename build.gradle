@@ -25,6 +25,10 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    //검증 관련 의존 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    //스프링 시큐리티의 암호화 관련된 라이브러리만 포함
+    implementation 'org.springframework.security:spring-security-crypto'
 //    implementation 'org.flywaydb:flyway-core'
     implementation 'mysql:mysql-connector-java'
     compileOnly 'org.projectlombok:lombok'
