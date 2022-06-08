@@ -28,4 +28,5 @@ spring:
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.flab.foodrun.domain.user
 
