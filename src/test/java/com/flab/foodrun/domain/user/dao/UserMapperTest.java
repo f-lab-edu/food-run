@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @SpringBootTest
-class UserDaoTest {
+class UserMapperTest {
 
 	@Autowired
 	private UserMapper userMapper;
@@ -23,7 +23,7 @@ class UserDaoTest {
 	private User user2 = null;
 
 	@BeforeEach
-	void initData(){
+	void initData() {
 		user1 = User.builder()
 			.loginId("test").password("testPassword").name("testName").role(Role.CLIENT)
 			.status(UserStatus.ACTIVE).phoneNumber("01012345678").email("test@gmail.com")
@@ -38,18 +38,23 @@ class UserDaoTest {
 	}
 
 	@Test
-	void save(){
+	void insertUser() {
 		//given
 		int saveCount = 0;
 		//when
 		saveCount += userMapper.insertUser(user1);
 		saveCount += userMapper.insertUser(user2);
+
+		String findLoginId1 = userMapper.findLoginIdById(user1.getId());
+		String findLoginId2 = userMapper.findLoginIdById(user2.getId());
 		//then
 		assertThat(saveCount).isEqualTo(2);
+		assertThat(user1.getLoginId()).isEqualTo(findLoginId1);
+		assertThat(user2.getLoginId()).isEqualTo(findLoginId2);
 	}
 
 	@Test
-	void countUserId(){
+	void countUserId() {
 		//given
 		userMapper.insertUser(user1);
 		//when
