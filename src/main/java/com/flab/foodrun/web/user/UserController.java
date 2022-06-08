@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequestMapping("/users")
+//@Controller, @ResponseBody 가 합쳐진 애노테이션
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
 	private final UserService userService;
 
-	@PostMapping("/add")
+	@PostMapping("/signup")
 	public Object addUser(@Validated @ModelAttribute("user") UserSaveForm form,
 		BindingResult bindingResult) {
 
