@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 //로그 출력 애노테이션
 @Slf4j
-@Service
+@Service("userService")
 //초기화 되지 않는 final 필드에 대해 자동으로 생성자를 만들어주는 애노테이션
 @RequiredArgsConstructor
 public class UserService {
