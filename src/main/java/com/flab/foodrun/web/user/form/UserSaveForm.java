@@ -10,16 +10,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * 회원가입 시 필요한 정보
- * 아이디, 패스워드, 이름, 역할, 전화번호, 이메일
- * 기본 주소, 상세 주소
- */
-
-@Getter @Setter
+//Getter, Setter 메서드를 만들어줌.
+@Getter
+@Setter
+//Builder 패턴을 쉽게 사용할 수 있게 도와주는 애노테이션
 @Builder
+//모든 인자가 존재하는 생성자를 만들어줌
 @AllArgsConstructor
 public class UserSaveForm {
+
 	@NotBlank
 	private String loginId;
 
@@ -47,7 +46,7 @@ public class UserSaveForm {
 	@NotBlank
 	private String detailAddress;
 
-	public User toEntity(){
+	public User toEntity() {
 		return User.builder()
 			.loginId(this.getLoginId())
 			.password(this.getPassword())
