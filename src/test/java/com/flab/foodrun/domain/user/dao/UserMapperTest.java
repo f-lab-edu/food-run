@@ -44,13 +44,12 @@ class UserMapperTest {
 		//when
 		saveCount += userMapper.insertUser(user1);
 		saveCount += userMapper.insertUser(user2);
-
-		String findLoginId1 = userMapper.findLoginIdById(user1.getId());
-		String findLoginId2 = userMapper.findLoginIdById(user2.getId());
+		int findUser1Count = userMapper.countByLoginId(user1.getLoginId());
+		int findUser2Count = userMapper.countByLoginId(user2.getLoginId());
 		//then
 		assertThat(saveCount).isEqualTo(2);
-		assertThat(user1.getLoginId()).isEqualTo(findLoginId1);
-		assertThat(user2.getLoginId()).isEqualTo(findLoginId2);
+		assertThat(findUser1Count).isEqualTo(1);
+		assertThat(findUser2Count).isEqualTo(1);
 	}
 
 	@Test
