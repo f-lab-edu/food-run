@@ -6,35 +6,30 @@
 
 <mapper namespace="com.flab.foodrun.domain.user.dao.UserMapper">
   <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
-    INSERT INTO user(
-        login_id,
-        password,
-        name,
-        role,
-        status,
-        phone_number,
-        email,
-        created_at,
-        created_by
-    ) VALUES (
-        #{loginId},
-        #{password},
-        #{name},
-        #{role},
-        #{status},
-        #{phoneNumber},
-        #{email},
-        NOW(),
-        #{createdBy}
-    )
+    INSERT INTO user(login_id,
+                     password,
+                     name,
+                     role,
+                     status,
+                     phone_number,
+                     email,
+                     created_at,
+                     created_by)
+    VALUES (#{loginId},
+            #{password},
+            #{name},
+            #{role},
+            #{status},
+            #{phoneNumber},
+            #{email},
+            NOW(),
+            #{createdBy})
   </insert>
 
   <select id="countByLoginId" resultType="int">
-    SELECT COUNT(*) FROM user WHERE login_id = #{loginId};
-  </select>
-
-  <select id="findLoginIdById" resultType="string">
-    SELECT login_id FROM user WHERE id = #{id}
+    SELECT COUNT(*)
+    FROM user
+    WHERE login_id = #{loginId};
   </select>
 
 </mapper>

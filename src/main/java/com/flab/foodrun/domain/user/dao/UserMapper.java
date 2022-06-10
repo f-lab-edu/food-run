@@ -10,6 +10,4 @@ public interface UserMapper {
 	int insertUser(User user);
 
 	int countByLoginId(String loginId);
-
-	String findLoginIdById(Long id);
 }
