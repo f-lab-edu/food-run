@@ -10,13 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
- * 로깅에 대한 추상 레이어를 제공하는 인터페이스 모음 애노테이션
- * 인터페이스를 사용하면 나중에 로깅 라이브러리를 변경해도 코드의 변경 없이 실행 가능(OCP)
+ * 로깅에 대한 추상 레이어를 제공하는 인터페이스 모음 애노테이션 인터페이스를 사용하면 나중에 로깅 라이브러리를 변경해도 코드의 변경 없이 실행 가능
  */
 @Slf4j
 @Service
-// 초기화 되지 않는 final 필드에 대해 자동으로 생성자를 만들어주는 애노테이션
-@RequiredArgsConstructor
+@RequiredArgsConstructor // final 필드에 대해 자동으로 생성자를 만들어주는 애노테이션
 public class UserService {
 
 	private final UserMapper userMapper;
