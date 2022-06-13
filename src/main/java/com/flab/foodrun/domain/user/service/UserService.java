@@ -2,6 +2,7 @@ package com.flab.foodrun.domain.user.service;
 
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.dao.UserMapper;
+import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
 import com.flab.foodrun.web.user.form.UserSaveForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +33,7 @@ public class UserService {
 	private void validateDuplicatedUser(String loginId) {
 		int loginIdCount = userMapper.countByLoginId(loginId);
 		if (loginIdCount > 0) {
-			throw new IllegalStateException("이미 존재하는 회원입니다");
+			throw new DuplicatedUserIdException("이미 존재하는 회원입니다");
 		}
 	}
 }
