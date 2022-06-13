@@ -2,8 +2,10 @@ package com.flab.foodrun.domain.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.flab.foodrun.domain.user.Role;
@@ -18,16 +20,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 //스프링 부트 기반 테스트를 실행하는 테스트 클래스에 지정할 수 있는 주석.
 //@Configuration 이 사용되지 않으면 @SpringBootConfiguration 을 자동으로 검색
@@ -41,8 +35,7 @@ class UserServiceTest {
 	List<UserSaveForm> formList = new ArrayList<>();
 
 	/**
-	 * userService 에 필요한 UserMapper, PasswordEncoder 모두 Mock 오브젝트로 교체
-	 * Mock 오브젝트를 만들어주는 애노테이션
+	 * userService 에 필요한 UserMapper, PasswordEncoder 모두 Mock 오브젝트로 교체 Mock 오브젝트를 만들어주는 애노테이션
 	 */
 	@Mock
 	UserMapper mockUserMapper;
