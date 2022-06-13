@@ -24,9 +24,13 @@ spring:
     username: mysql_dba
     password: foodrun2*
 
-# 3. MyBatis Config
+# 3. message properties 불러오기 설정
+
+  messages:
+    basename: errors
+
+# 4. MyBatis Config
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   type-aliases-package: com.flab.foodrun.domain.user
-
