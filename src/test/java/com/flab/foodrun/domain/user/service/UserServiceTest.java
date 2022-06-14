@@ -51,12 +51,12 @@ class UserServiceTest {
 
 		formList = Arrays.asList(
 			UserSaveForm.builder().loginId("testId1").password("test-password").name("testName")
-				.role(String.valueOf(Role.CLIENT)).status(String.valueOf(UserStatus.ACTIVE))
+				.role(Role.CLIENT).status(UserStatus.ACTIVE)
 				.phoneNumber("01012345779").email("test1@gmail.com")
 				.streetAddress("testStreetAddress1").detailAddress("testDetailAddress").build(),
 
 			UserSaveForm.builder().loginId("testId2").password("test-password").name("testName")
-				.role(String.valueOf(Role.CLIENT)).status(String.valueOf(UserStatus.ACTIVE))
+				.role(Role.CLIENT).status(UserStatus.ACTIVE)
 				.phoneNumber("01012345779").email("test1@gmail.com")
 				.streetAddress("testStreetAddress1").detailAddress("testDetailAddress").build());
 	}
