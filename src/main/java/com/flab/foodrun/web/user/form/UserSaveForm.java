@@ -5,6 +5,7 @@ import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,11 +27,11 @@ public class UserSaveForm {
 	@NotBlank(message = "{name.notBlank}")
 	private String name;
 
-	@NotBlank(message = "{role.notBlank}")
-	private String role;
+	@NotNull(message = "{role.notNull}")
+	private Role role;
 
-	@NotBlank(message = "{status.notBlank}")
-	private String status;
+	@NotNull(message = "{status.notNull}")
+	private UserStatus status;
 
 	@NotBlank(message = "{phoneNumber.notBlank}")
 	private String phoneNumber;
@@ -50,8 +51,8 @@ public class UserSaveForm {
 			.loginId(this.getLoginId())
 			.password(this.getPassword())
 			.name(this.getName())
-			.role(Role.CLIENT)
-			.status(UserStatus.ACTIVE)
+			.role(this.getRole())
+			.status(this.getStatus())
 			.phoneNumber(this.getPhoneNumber())
 			.email(this.getEmail())
 			.streetAddress(this.getStreetAddress())
