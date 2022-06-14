@@ -6,5 +6,4 @@ public enum UserStatus {
 	 */
 	ACTIVE,
 	SUSPENSION
-
 }
