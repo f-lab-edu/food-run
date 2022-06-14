@@ -32,4 +32,22 @@
     WHERE login_id = #{loginId};
   </select>
 
+  <resultMap id="userMap" type="com.flab.foodrun.domain.user.User">
+    <result column="login_id" property="loginId" jdbcType="VARCHAR" javaType="String"/>
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" javaType="String"/>
+  </resultMap>
+
+  <select id="selectUserByLoginId" resultType="com.flab.foodrun.domain.user.User"
+    resultMap="userMap">
+    SELECT id,
+           login_id,
+           password,
+           name,
+           role,
+           status,
+           phone_number,
+           email
+    FROM user
+    WHERE id = #{id};
+  </select>
 </mapper>
