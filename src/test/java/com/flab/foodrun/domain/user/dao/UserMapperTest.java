@@ -61,4 +61,19 @@ class UserMapperTest {
 		//then
 		assertThat(userCount).isEqualTo(1);
 	}
+
+	@Test
+	void findById() {
+		//given
+		userMapper.insertUser(user1);
+		userMapper.insertUser(user2);
+		//when
+		User findUser1 = (userMapper.selectUserByLoginId(
+			Math.toIntExact(user1.getId()))).orElseThrow();
+		User findUser2 = (userMapper.selectUserByLoginId(
+			Math.toIntExact(user2.getId()))).orElseThrow();
+		//then
+		assertThat(findUser1.getLoginId()).isEqualTo(user1.getLoginId());
+		assertThat(findUser2.getLoginId()).isEqualTo(user2.getLoginId());
+	}
 }
