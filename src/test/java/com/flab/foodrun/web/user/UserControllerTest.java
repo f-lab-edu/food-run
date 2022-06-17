@@ -1,5 +1,6 @@
 package com.flab.foodrun.web.user;
 
+import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.DUPLICATED_USER_ID_EX_MESSAGE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,8 +11,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.UserStatus;
+import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
 import com.flab.foodrun.domain.user.service.UserService;
 import com.flab.foodrun.web.user.form.UserSaveForm;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +43,11 @@ class UserControllerTest {
 	UserService userService;
 
 	ObjectMapper mapper = new ObjectMapper();
+	UserSaveForm userSaveForm;
 
-	@Test
-	@DisplayName("회원가입 성공 시 201 상태코드 리턴")
-	void addUserSuccess() throws Exception {
-		//given
-		UserSaveForm userSaveForm = UserSaveForm.builder()
+	@BeforeEach
+	void initFormData() {
+		userSaveForm = UserSaveForm.builder()
 			.loginId("testLoginId")
 			.password("testPassword")
 			.name("testName")
@@ -55,7 +57,12 @@ class UserControllerTest {
 			.email("test@gmail.com")
 			.streetAddress("testStreetAddress")
 			.detailAddress("testDetailAddress").build();
+	}
 
+	@Test
+	@DisplayName("회원가입 성공 시 201 상태코드 리턴")
+	void addUserSuccess() throws Exception {
+		//given
 		given(userService.addUser(any(UserSaveForm.class))).willReturn(userSaveForm.toEntity());
 		//when
 		mvc.perform(post("/users")
@@ -71,11 +78,11 @@ class UserControllerTest {
 	}
 
 	@Test
-	@DisplayName("회원가입 실패 시 400 상태코드 리턴")
+	@DisplayName("회원가입 필수 항목 누락일 때 400 상태코드 리턴")
 	void addUserFail() throws Exception {
 		//given
 		UserSaveForm userSaveForm = UserSaveForm.builder()
-			.loginId("testLoginId")
+			.loginId("testLoginIdFail")
 			.password("testPassword").build();
 
 		given(userService.addUser(any(UserSaveForm.class))).willReturn(userSaveForm.toEntity());
@@ -87,6 +94,24 @@ class UserControllerTest {
 				.accept(MediaType.APPLICATION_JSON))
 			//then
 			.andDo(print())
-			.andExpect(status().isBadRequest());
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.code").value("FieldErrorException"));
+	}
+
+	@Test
+	@DisplayName("중복아이디 입력 시 런타임 예외 출력")
+	void duplicatedUserIdPost() throws Exception {
+		//given
+		given(userService.addUser(any(UserSaveForm.class))).willThrow(
+			DuplicatedUserIdException.class);
+		//when
+		mvc.perform(post("/users")
+				.content(mapper.writeValueAsString(userSaveForm))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.code").value("DuplicatedUserIdException"))
+			.andExpect(jsonPath("$.message").value(DUPLICATED_USER_ID_EX_MESSAGE))
+			.andDo(print());
 	}
 }
