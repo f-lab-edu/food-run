@@ -2,7 +2,7 @@ package com.flab.foodrun.domain.user.exception;
 
 public class DuplicatedUserIdException extends RuntimeException {
 
-	public DuplicatedUserIdException(String message) {
-		super(message);
+	public DuplicatedUserIdException() {
+		super();
 	}
 }
