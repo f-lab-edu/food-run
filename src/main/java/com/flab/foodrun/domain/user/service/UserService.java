@@ -22,7 +22,7 @@ public class UserService {
 
 	public User addUser(UserSaveForm userSaveForm) {
 		if(userMapper.countByLoginId(userSaveForm.getLoginId()) > 0){
-			throw new DuplicatedUserIdException("이미 존재하는 회원입니다");
+			throw new DuplicatedUserIdException();
 		}
 		userSaveForm.setPassword(passwordEncoder.encode(userSaveForm.getPassword()));
 		User user = userSaveForm.toEntity();
