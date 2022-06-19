@@ -27,6 +27,8 @@ spring:
     hikari:
       connection-timeout: 10000
       max-lifetime: 420000
+      idle-timeout: 10000
+      validation-timeout: 10000
 
   # 3. message properties 불러오기 설정
 
