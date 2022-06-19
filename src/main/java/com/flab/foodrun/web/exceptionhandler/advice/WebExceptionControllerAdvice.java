@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice // @ResponseBody + @ControllerAdvice
 public class WebExceptionControllerAdvice {
 
+	public static final String DUPLICATED_USER_ID_EX_MESSAGE = "이미 존재하는 회원입니다.";
+
 	@ExceptionHandler // Controller 계층에서 발생하는 에러를 잡아주는 기능을 가진 애노테이션
 	public ResponseEntity<ErrorResult> bindFieldErrorExceptionHandler(BindException e) {
 		ErrorResult errorResult = new ErrorResult("FieldErrorException",
@@ -27,7 +29,8 @@ public class WebExceptionControllerAdvice {
 	@ExceptionHandler // Controller 계층에서 발생하는 에러를 잡아주는 기능을 가진 애노테이션
 	public ResponseEntity<ErrorResult> duplicatedUserIdExceptionHandler(
 		DuplicatedUserIdException e) {
-		ErrorResult errorResult = new ErrorResult("DuplicatedUserIdException", e.getMessage());
+		ErrorResult errorResult = new ErrorResult("DuplicatedUserIdException",
+			DUPLICATED_USER_ID_EX_MESSAGE);
 		return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
 	}
 }

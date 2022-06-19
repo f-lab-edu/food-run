@@ -21,17 +21,12 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	public User addUser(UserSaveForm userSaveForm) {
-		validateDuplicatedUser(userSaveForm.getLoginId());
+		if(userMapper.countByLoginId(userSaveForm.getLoginId()) > 0){
+			throw new DuplicatedUserIdException();
+		}
 		userSaveForm.setPassword(passwordEncoder.encode(userSaveForm.getPassword()));
 		User user = userSaveForm.toEntity();
 		userMapper.insertUser(user);
 		return user;
-	}
-
-	private void validateDuplicatedUser(String loginId) {
-		int loginIdCount = userMapper.countByLoginId(loginId);
-		if (loginIdCount > 0) {
-			throw new DuplicatedUserIdException("이미 존재하는 회원입니다");
-		}
 	}
 }

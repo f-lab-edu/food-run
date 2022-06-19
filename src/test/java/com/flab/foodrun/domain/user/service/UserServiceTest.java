@@ -12,6 +12,7 @@ import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.dao.UserMapper;
+import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
 import com.flab.foodrun.web.user.form.UserSaveForm;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -86,8 +87,8 @@ class UserServiceTest {
 		//when
 		//then
 		verify(mockUserMapper, times(0)).countByLoginId(anyString());
-		assertThatThrownBy(() -> {
-			User findUser1 = userService.addUser(formList.get(0));
-		});
+		var form = formList.get(0);
+		assertThatThrownBy(() -> userService.addUser(form)).isInstanceOf(
+			DuplicatedUserIdException.class);
 	}
 }

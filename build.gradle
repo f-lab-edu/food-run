@@ -2,9 +2,69 @@ plugins {
     id 'org.springframework.boot' version '2.6.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id 'jacoco'
+    id "org.sonarqube" version "3.4.0.2513"
 }
 
-bootJar{
+// jacoco 버전
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+test {
+    useJUnitPlatform()
+    /**
+     * 테스트 할 때 JaCoCo 를 함께 실행하도록 구성.
+     * 개별 테스트 실행 시 covered ratio 가 낮게 나오기 때문에 전체 테스트일 때만 finalizedBy 주석을 제거한다.
+     */
+    // finalizedBy 'jacocoTestReport'
+}
+
+jacocoTestReport {
+    // html, xml 파일을 남기도록 설정
+    // xml 파일 남기는 이유는 sonarqube 연동을 위함.
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled false
+
+        //파일 디렉토리 설정부분
+        html.destination file("$buildDir/jacocoHtml")
+        xml.destination file("$buildDir/result.xml")
+    }
+
+    //jacocoTestReport 가 실행된 다음 jacocoTestCoverageVerification 로 다음 작업을 넘긴다.
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+// 테스트 커버리지 기준을 설정할 수 있는 부분
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = true
+            /**
+             * 코드 커버리지 체크 기준. 기준에 대해선 아래 사이트 참조
+             * https://www.jacoco.org/jacoco/trunk/doc/api/org/jacoco/core/analysis/ICoverageNode.ElementType.html
+             */
+            element = 'CLASS'
+
+            /**
+             * counter : 커버리지 메트릭을 계산하는 단위. 단위에 대해서는 아래 사이트 참조
+             * https://www.eclemma.org/jacoco/trunk/doc/counters.html
+             * value : 카운터를 만족시키기 위한 방법들을 제공하는 상수. 상수에 대해서는 아래 사이트 참조
+             * https://www.jacoco.org/jacoco/trunk/doc/api/org/jacoco/core/analysis/ICounter.CounterValue.html
+             * minimum : 최소 비율을 나타냄
+             */
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.7
+            }
+        }
+    }
+}
+
+bootJar {
     launchScript()
 }
 
@@ -35,8 +95,4 @@ dependencies {
 //    runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
 }
