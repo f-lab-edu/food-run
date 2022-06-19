@@ -20,7 +20,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db?useSSL=false
+    url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db
     username: mysql_dba
     password: foodrun2*
 
