@@ -20,15 +20,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db
+    url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db?useSSL=false
     username: mysql_dba
     password: foodrun2*
-
-    hikari:
-      connection-timeout: 10000
-      max-lifetime: 420000
-      idle-timeout: 10000
-      validation-timeout: 10000
 
   # 3. message properties 불러오기 설정
 
