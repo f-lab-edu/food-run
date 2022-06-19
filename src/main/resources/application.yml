@@ -24,7 +24,11 @@ spring:
     username: mysql_dba
     password: foodrun2*
 
-# 3. message properties 불러오기 설정
+    hikari:
+      connection-timeout: 10000
+      max-lifetime: 420000
+
+  # 3. message properties 불러오기 설정
 
   messages:
     basename: errors
