@@ -1,6 +1,6 @@
 # DB Connection Configuration
 
-# 1. flyway + h2
+# flyway + h2
 # 클라우드 사용으로 인한 주석 처리
 
 #spring:
@@ -15,7 +15,7 @@
 #    encoding: utf-8
 #    baseline-on-migrate: true
 
-# 2. NCP - cloud for mysql
+# NCP - cloud for mysql
 
 spring:
   datasource:
@@ -24,13 +24,14 @@ spring:
     username: mysql_dba
     password: foodrun2*
 
-  # 3. message properties 불러오기 설정
+  # message properties 불러오기 설정
 
   messages:
     basename: errors
 
-# 4. MyBatis Config
+# MyBatis Config
 
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   type-aliases-package: com.flab.foodrun.domain.user
+
