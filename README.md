@@ -1,5 +1,3 @@
-[![Coverage](.github/badges/jacoco.svg)](https://github.com/f-lab-edu/food-run/actions/workflows/main.yml)
-
 # FOOD-RUN
 
 음식 배달 서비스 입니다. 음식점의 메뉴를 선택해 집 앞으로 배달하는 서비스입니다.
