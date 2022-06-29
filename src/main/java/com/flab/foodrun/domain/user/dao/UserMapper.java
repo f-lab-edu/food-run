@@ -14,5 +14,7 @@ public interface UserMapper {
 
 	int countByLoginId(String loginId);
 
-	Optional<User> selectUserByLoginId(int id);
+	Optional<User> selectUserById(int id);
+
+	Optional<User> selectUserByLoginId(String loginId);
 }
