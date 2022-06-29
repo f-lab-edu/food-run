@@ -26,6 +26,6 @@ public class UserController {
 
 	@PostMapping
 	public ResponseEntity<User> addUser(@Validated @RequestBody UserSaveForm form) {
-		return new ResponseEntity<>(userService.addUser(form), HttpStatus.CREATED);
+		return new ResponseEntity<>(userService.addUser(form.toEntity()), HttpStatus.CREATED);
 	}
 }

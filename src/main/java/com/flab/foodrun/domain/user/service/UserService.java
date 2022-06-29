@@ -3,7 +3,6 @@ package com.flab.foodrun.domain.user.service;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.dao.UserMapper;
 import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
-import com.flab.foodrun.web.user.form.UserSaveForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,12 +19,11 @@ public class UserService {
 	private final UserMapper userMapper;
 	private final PasswordEncoder passwordEncoder;
 
-	public User addUser(UserSaveForm userSaveForm) {
-		if(userMapper.countByLoginId(userSaveForm.getLoginId()) > 0){
+	public User addUser(User user) {
+		if(userMapper.countByLoginId(user.getLoginId()) > 0){
 			throw new DuplicatedUserIdException();
 		}
-		userSaveForm.setPassword(passwordEncoder.encode(userSaveForm.getPassword()));
-		User user = userSaveForm.toEntity();
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userMapper.insertUser(user);
 		return user;
 	}

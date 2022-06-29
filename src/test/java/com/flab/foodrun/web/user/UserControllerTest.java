@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.foodrun.domain.user.Role;
+import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
 import com.flab.foodrun.domain.user.service.UserService;
@@ -63,7 +64,7 @@ class UserControllerTest {
 	@DisplayName("회원가입 성공 시 201 상태코드 리턴")
 	void addUserSuccess() throws Exception {
 		//given
-		given(userService.addUser(any(UserSaveForm.class))).willReturn(userSaveForm.toEntity());
+		given(userService.addUser(any(User.class))).willReturn(userSaveForm.toEntity());
 		//when
 		mvc.perform(post("/users")
 				.content(mapper.writeValueAsString(userSaveForm))
@@ -85,7 +86,7 @@ class UserControllerTest {
 			.loginId("testLoginIdFail")
 			.password("testPassword").build();
 
-		given(userService.addUser(any(UserSaveForm.class))).willReturn(userSaveForm.toEntity());
+		given(userService.addUser(any(User.class))).willReturn(userSaveForm.toEntity());
 
 		//when
 		mvc.perform(post("/users")
@@ -102,7 +103,7 @@ class UserControllerTest {
 	@DisplayName("중복아이디 입력 시 런타임 예외 출력")
 	void duplicatedUserIdPost() throws Exception {
 		//given
-		given(userService.addUser(any(UserSaveForm.class))).willThrow(
+		given(userService.addUser(any(User.class))).willThrow(
 			DuplicatedUserIdException.class);
 		//when
 		mvc.perform(post("/users")

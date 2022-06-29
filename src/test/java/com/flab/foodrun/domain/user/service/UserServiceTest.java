@@ -69,8 +69,8 @@ class UserServiceTest {
 		when(mockUserMapper.insertUser(any(User.class))).thenReturn(1);
 
 		//when
-		User findUser1 = userService.addUser(formList.get(0));
-		User findUser2 = userService.addUser(formList.get(1));
+		User findUser1 = userService.addUser(formList.get(0).toEntity());
+		User findUser2 = userService.addUser(formList.get(1).toEntity());
 
 		//then
 		verify(mockUserMapper, times(2)).countByLoginId(anyString());
@@ -88,7 +88,7 @@ class UserServiceTest {
 		//then
 		verify(mockUserMapper, times(0)).countByLoginId(anyString());
 		var form = formList.get(0);
-		assertThatThrownBy(() -> userService.addUser(form)).isInstanceOf(
+		assertThatThrownBy(() -> userService.addUser(form.toEntity())).isInstanceOf(
 			DuplicatedUserIdException.class);
 	}
 }
