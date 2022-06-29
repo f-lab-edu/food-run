@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter // getter 메서드 자동 생성 애노테이션
 @Setter // setter 메서드 자동 생성 애노테이션
 @Builder //Builder 패턴을 쉽게 사용할 수 있게 도와주는 애노테이션
-@AllArgsConstructor //모든 인자가 존재하는 생성자를 만들어줌
+@AllArgsConstructor // 모든 인자가 존재하는 생성자를 만들어줌
 public class UserSaveForm {
 
 	@NotBlank(message = "{loginId.notBlank}")
