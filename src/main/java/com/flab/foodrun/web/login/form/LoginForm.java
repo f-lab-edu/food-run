@@ -3,6 +3,7 @@ package com.flab.foodrun.web.login.form;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @Getter : getter 메서드 자동 생성 애노테이션
@@ -11,11 +12,15 @@ import lombok.Getter;
  */
 
 @Getter
+@Setter
 @AllArgsConstructor
 public class LoginForm {
 
 	@NotBlank
 	private String loginId;
+
 	@NotBlank
 	private String password;
 }
+
+
