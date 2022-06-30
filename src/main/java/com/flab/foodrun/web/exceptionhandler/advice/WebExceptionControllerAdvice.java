@@ -21,7 +21,7 @@ public class WebExceptionControllerAdvice {
 
 	public static final String DUPLICATED_USER_ID_EX_MESSAGE = "이미 존재하는 회원입니다.";
 	public static final String LOGIN_ID_NOT_FOUND_EX_MESSAGE = "아이디를 찾을 수 없습니다.";
-	public static final String INVALID_PASSWORD_EX_MESSAGE = "INVALID_PASSWORD_EX_MESSAGE";
+	public static final String INVALID_PASSWORD_EX_MESSAGE = "비밀번호가 일치하지 않습니다.";
 
 	@ExceptionHandler // Controller 계층에서 발생하는 에러를 잡아주는 기능을 가진 애노테이션
 	public ResponseEntity<ErrorResult> bindFieldErrorExceptionHandler(BindException e) {
