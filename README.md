@@ -18,7 +18,7 @@
 - [Git Commit Message Convention](https://github.com/f-lab-edu/food-run/wiki/3.Convention#commit-message-convention)
 - 목표 테스트 커버리지 : 70%
 
-[![coverage](../badges/jacoco.svg)](https://github.com/f-lab-edu/food-run/actions/workflows/main.yml)
+[![coverage](.github/badges/jacoco.svg)](https://github.com/f-lab-edu/food-run/actions/workflows/main.yml)
 
 ## 주요 기능
 
