@@ -4,23 +4,26 @@
 
 ## 사용 기술 및 개발 환경
 
-- Java 17
-- Spring Boot 2.6.7
-- IntelliJ
-- gradle
-- MyBatis
-- MySQL
+- 백엔드: Java 17, Spring Boot 2.6.7
+- ORM: MyBatis
+- 테스트 프레임워크: Junit5
+- IDE: IntelliJ
+- CI/CD: gradle, Github Actions
+- DB/배포 서버: Naver Cloud Platform
+- 코드 품질 측정 도구: JaCoCo, SonarQube
+- 협업 도구: Slack
+
 
 ## 개발 규칙
 
 - [Java Coding Convention](https://github.com/f-lab-edu/food-run/wiki/3.Convention#java-coding-convention)
 - [Git Branch 전략](https://github.com/f-lab-edu/food-run/wiki/3.Convention#git-branch-%EC%A0%84%EB%9E%B5)
 - [Git Commit Message Convention](https://github.com/f-lab-edu/food-run/wiki/3.Convention#commit-message-convention)
-- 목표 테스트 커버리지 : 70%
+- 목표 테스트 커버리지 : **LINE** 기준, **70% 이상**
 
-|| 테스트 커버리지 |       |
-|:--------:|:--------------------------------------:|
-|  실시간 수치   | ![coverage](.github/badges/jacoco.svg) |
+|              실시간 테스트 커버리지              |      
+|:--------------------------------------:|
+| ![coverage](.github/badges/jacoco.svg) |
 
 ## 주요 기능
 
