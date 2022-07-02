@@ -18,7 +18,9 @@
 - [Git Commit Message Convention](https://github.com/f-lab-edu/food-run/wiki/3.Convention#commit-message-convention)
 - 목표 테스트 커버리지 : 70%
 
-[![coverage](.github/badges/jacoco.svg)](https://github.com/f-lab-edu/food-run/actions/workflows/main.yml)
+|| 테스트 커버리지 |                                                                                                         브랜치 커버리지                                                                                                          |
+|:--------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------------:|
+|  현재 수치   | [![co [![branches](.github/badges/branches.svg)](https://github.com/f-lab-edu/food-run/actions/workflows/main.yml) nches](.github/badges/branches.svg)](https://github.com/f-lab-edu/food-run/actions/workflows/main.yml) |
 
 ## 주요 기능
 
@@ -26,6 +28,7 @@
 - [유스케이스](https://github.com/f-lab-edu/food-run/wiki/2.Use-Case)
 
 ## ERD
+
 - [ERD 원본 - diagram.io](https://dbdiagram.io/d/627e692a7f945876b61451b4)
 
 ![](ERD.png)
