@@ -4,9 +4,12 @@ import com.flab.foodrun.domain.login.service.LoginService;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.web.SessionConst;
 import com.flab.foodrun.web.login.form.LoginForm;
+import com.flab.foodrun.web.login.form.LoginResponseForm;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +26,17 @@ public class LoginController {
 	private final LoginService loginService;
 
 	@PostMapping("/login")
-	public String login(@Validated @RequestBody LoginForm loginForm, @NotNull HttpSession session) {
+	public ResponseEntity<LoginResponseForm> login(@Validated @RequestBody LoginForm loginForm,
+		@NotNull HttpSession session) {
+
 		User loginUser = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
+		LoginResponseForm responseForm = LoginResponseForm.builder()
+			.loginId(loginUser.getLoginId())
+			.name(loginUser.getName())
+			.phoneNumber(loginUser.getPhoneNumber())
+			.build();
+
 		session.setAttribute(SessionConst.LOGIN_SESSION, loginUser.getLoginId());
-		return null;
+		return new ResponseEntity<>(responseForm, HttpStatus.OK);
 	}
 }
