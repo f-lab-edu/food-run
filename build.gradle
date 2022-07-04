@@ -26,11 +26,11 @@ jacocoTestReport {
     reports {
         html.enabled true
         xml.enabled true
-        csv.enabled false
+        csv.enabled true
 
         //파일 디렉토리 설정부분
         html.destination file("$buildDir/jacocoHtml")
-        xml.destination file("$buildDir/result.xml")
+        xml.destination file("$buildDir/jacoco.xml")
     }
 
     //jacocoTestReport 가 실행된 다음 jacocoTestCoverageVerification 로 다음 작업을 넘긴다.

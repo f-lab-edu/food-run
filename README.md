@@ -1,22 +1,42 @@
 # FOOD-RUN
 
-음식 배달 서비스 입니다. 음식점의 메뉴를 선택해 집 앞으로 배달하는 서비스입니다.
+---
+
+<div align="center">
+
+![image1](title.png)
+
+### 쿠팡 이츠, 배달의 민족 앱을 모티브로 하여 만든 배달 애플리케이션 프로젝트입니다.
+
+</div>
+
+---
 
 ## 사용 기술 및 개발 환경
 
 - Java 17
 - Spring Boot 2.6.7
+- MyBatis
+- Junit5
 - IntelliJ
 - gradle
-- MyBatis
-- MySQL
+- GitHub Actions
+- Naver Cloud Platform
+- JaCoCo
+- SonarQube
+- Slack
+
 
 ## 개발 규칙
 
 - [Java Coding Convention](https://github.com/f-lab-edu/food-run/wiki/3.Convention#java-coding-convention)
 - [Git Branch 전략](https://github.com/f-lab-edu/food-run/wiki/3.Convention#git-branch-%EC%A0%84%EB%9E%B5)
 - [Git Commit Message Convention](https://github.com/f-lab-edu/food-run/wiki/3.Convention#commit-message-convention)
-- 목표 테스트 커버리지 : 70%
+- 목표 테스트 커버리지 : **LINE** 기준, **70% 이상**
+
+|                 실시간 측정                 |      
+|:--------------------------------------:|
+| ![coverage](.github/badges/jacoco.svg) |
 
 ## 주요 기능
 
@@ -24,6 +44,7 @@
 - [유스케이스](https://github.com/f-lab-edu/food-run/wiki/2.Use-Case)
 
 ## ERD
-- [ERD 원본 - dbdiagram.io](https://dbdiagram.io/d/627e692a7f945876b61451b4)
+
+- [ERD 원본 - diagram.io](https://dbdiagram.io/d/627e692a7f945876b61451b4)
 
 ![](ERD.png)
