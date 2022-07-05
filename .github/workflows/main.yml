@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - 'feature/21'
+      - 'feature/23'
   # pull_request:
     # branches: [ "main" ]
 
