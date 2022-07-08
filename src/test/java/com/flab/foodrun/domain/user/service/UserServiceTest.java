@@ -13,7 +13,7 @@ import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.dao.UserMapper;
 import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
-import com.flab.foodrun.web.user.dto.UserSaveForm;
+import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +33,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-	List<UserSaveForm> formList = new ArrayList<>();
+	List<UserSaveRequest> formList = new ArrayList<>();
 
 	/**
 	 * userService 에 필요한 UserMapper, PasswordEncoder 모두 Mock 오브젝트로 교체 Mock 오브젝트를 만들어주는 애노테이션
@@ -51,12 +51,12 @@ class UserServiceTest {
 		userService = new UserService(mockUserMapper, mockPasswordEncoder);
 
 		formList = Arrays.asList(
-			UserSaveForm.builder().loginId("testId1").password("test-password").name("testName")
+			UserSaveRequest.builder().loginId("testId1").password("test-password").name("testName")
 				.role(Role.CLIENT).status(UserStatus.ACTIVE)
 				.phoneNumber("01012345779").email("test1@gmail.com")
 				.streetAddress("testStreetAddress1").detailAddress("testDetailAddress").build(),
 
-			UserSaveForm.builder().loginId("testId2").password("test-password").name("testName")
+			UserSaveRequest.builder().loginId("testId2").password("test-password").name("testName")
 				.role(Role.CLIENT).status(UserStatus.ACTIVE)
 				.phoneNumber("01012345779").email("test1@gmail.com")
 				.streetAddress("testStreetAddress1").detailAddress("testDetailAddress").build());

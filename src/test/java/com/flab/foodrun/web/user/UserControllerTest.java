@@ -14,7 +14,7 @@ import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
 import com.flab.foodrun.domain.user.service.UserService;
-import com.flab.foodrun.web.user.dto.UserSaveForm;
+import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,11 +44,11 @@ class UserControllerTest {
 	UserService userService;
 
 	ObjectMapper mapper = new ObjectMapper();
-	UserSaveForm userSaveForm;
+	UserSaveRequest userSaveRequest;
 
 	@BeforeEach
 	void initFormData() {
-		userSaveForm = UserSaveForm.builder()
+		userSaveRequest = UserSaveRequest.builder()
 			.loginId("testLoginId")
 			.password("testPassword")
 			.name("testName")
@@ -64,10 +64,10 @@ class UserControllerTest {
 	@DisplayName("회원가입 성공 시 201 상태코드 리턴")
 	void addUserSuccess() throws Exception {
 		//given
-		given(userService.addUser(any(User.class))).willReturn(userSaveForm.toEntity());
+		given(userService.addUser(any(User.class))).willReturn(userSaveRequest.toEntity());
 		//when
 		mvc.perform(post("/users")
-				.content(mapper.writeValueAsString(userSaveForm))
+				.content(mapper.writeValueAsString(userSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 			//then
@@ -82,15 +82,15 @@ class UserControllerTest {
 	@DisplayName("회원가입 필수 항목 누락일 때 400 상태코드 리턴")
 	void addUserFail() throws Exception {
 		//given
-		UserSaveForm userSaveForm = UserSaveForm.builder()
+		UserSaveRequest userSaveRequest = UserSaveRequest.builder()
 			.loginId("testLoginIdFail")
 			.password("testPassword").build();
 
-		given(userService.addUser(any(User.class))).willReturn(userSaveForm.toEntity());
+		given(userService.addUser(any(User.class))).willReturn(userSaveRequest.toEntity());
 
 		//when
 		mvc.perform(post("/users")
-				.content(mapper.writeValueAsString(userSaveForm))
+				.content(mapper.writeValueAsString(userSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 			//then
@@ -107,7 +107,7 @@ class UserControllerTest {
 			DuplicatedUserIdException.class);
 		//when
 		mvc.perform(post("/users")
-				.content(mapper.writeValueAsString(userSaveForm))
+				.content(mapper.writeValueAsString(userSaveRequest))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isBadRequest())

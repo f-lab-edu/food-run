@@ -2,7 +2,7 @@ package com.flab.foodrun.web.user;
 
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.service.UserService;
-import com.flab.foodrun.web.user.dto.UserSaveForm;
+import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,8 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping
-	public ResponseEntity<User> addUser(@Validated @RequestBody UserSaveForm form) {
-		return new ResponseEntity<>(userService.addUser(form.toEntity()), HttpStatus.CREATED);
+	public ResponseEntity<User> addUser(@Validated @RequestBody UserSaveRequest userSaveRequest) {
+		return new ResponseEntity<>(userService.addUser(userSaveRequest.toEntity()),
+			HttpStatus.CREATED);
 	}
 }

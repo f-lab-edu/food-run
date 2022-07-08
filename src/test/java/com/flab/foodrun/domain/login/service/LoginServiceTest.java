@@ -9,7 +9,7 @@ import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.service.UserService;
-import com.flab.foodrun.web.user.dto.UserSaveForm;
+import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,12 +27,12 @@ class LoginServiceTest {
 	@Autowired
 	UserService userService;
 
-	UserSaveForm testUser;
+	UserSaveRequest testUser;
 
 	@BeforeEach
 	void initData() {
 		/*테스트용 userSaveForm() 데이터 설정*/
-		testUser = UserSaveForm.builder()
+		testUser = UserSaveRequest.builder()
 			.loginId("testLoginId2")
 			.password("testLoginPassword")
 			.name("testName")

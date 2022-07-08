@@ -16,7 +16,7 @@ import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.service.UserService;
 import com.flab.foodrun.web.login.dto.LoginRequest;
-import com.flab.foodrun.web.user.dto.UserSaveForm;
+import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,13 +50,13 @@ class LoginControllerTest {
 	UserService userService;
 
 	MockHttpSession mockSession = new MockHttpSession();
-	UserSaveForm userSaveForm = null;
+	UserSaveRequest userSaveRequest = null;
 	ObjectMapper objectMapper = new ObjectMapper();
 
 	@BeforeEach
 	void init() {
 		/*로그인 테스트용 아이디 가입*/
-		userSaveForm = UserSaveForm.builder()
+		userSaveRequest = UserSaveRequest.builder()
 			.loginId("loginServiceTestId")
 			.password("testPassword")
 			.name("testName")
@@ -72,9 +72,9 @@ class LoginControllerTest {
 	@DisplayName("로그인 테스트 : 성공")
 	void loginSuccessTest() throws Exception {
 		//given
-		userService.addUser(userSaveForm.toEntity());
-		LoginRequest loginForm = new LoginRequest(userSaveForm.getLoginId(),
-			userSaveForm.getPassword());
+		userService.addUser(userSaveRequest.toEntity());
+		LoginRequest loginForm = new LoginRequest(userSaveRequest.getLoginId(),
+			userSaveRequest.getPassword());
 		//when
 		User loginUser = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
 		mockMvc.perform(post("/login")
@@ -108,7 +108,7 @@ class LoginControllerTest {
 	@DisplayName("POST: 아이디를 못찾을 때")
 	void postNotFoundId() throws Exception {
 		//given
-		User user = userService.addUser(userSaveForm.toEntity());
+		User user = userService.addUser(userSaveRequest.toEntity());
 		LoginRequest loginForm = new LoginRequest("invalid,", "invalid");
 		//when
 		mockMvc.perform(post("/login")
@@ -125,7 +125,7 @@ class LoginControllerTest {
 	@DisplayName("POST: 비밀번호를 못찾을 때")
 	void postNotFoundPassword() throws Exception {
 		//given
-		User user = userService.addUser(userSaveForm.toEntity());
+		User user = userService.addUser(userSaveRequest.toEntity());
 		LoginRequest loginForm = new LoginRequest(user.getLoginId(), "invalid");
 		//when
 		mockMvc.perform(post("/login")
