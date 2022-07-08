@@ -20,7 +20,7 @@ public class UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	public User addUser(User user) {
-		if(userMapper.countByLoginId(user.getLoginId()) > 0){
+		if (userMapper.countByLoginId(user.getLoginId()) > 0) {
 			throw new DuplicatedUserIdException();
 		}
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
