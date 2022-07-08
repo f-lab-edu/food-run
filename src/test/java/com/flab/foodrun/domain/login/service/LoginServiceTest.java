@@ -57,6 +57,11 @@ class LoginServiceTest {
 		//then
 		assertThat(loginUser.getPassword()).isNotEqualTo(testUser.getPassword());
 		assertThat(loginUser.getLoginId()).isEqualTo(testUser.getLoginId());
+		assertThat(loginUser.getName()).isEqualTo(testUser.getName());
+		assertThat(loginUser.getEmail()).isEqualTo(testUser.getEmail());
+		assertThat(loginUser.getRole()).isEqualTo(Role.CLIENT);
+		assertThat(loginUser.getStatus()).isEqualTo(UserStatus.ACTIVE);
+		assertThat(loginUser.getPhoneNumber()).isEqualTo(testUser.getPhoneNumber());
 	}
 
 	@Test
