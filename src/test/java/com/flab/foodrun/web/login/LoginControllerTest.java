@@ -15,7 +15,7 @@ import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.service.UserService;
-import com.flab.foodrun.web.login.form.LoginForm;
+import com.flab.foodrun.web.login.dto.LoginRequest;
 import com.flab.foodrun.web.user.form.UserSaveForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -73,7 +73,8 @@ class LoginControllerTest {
 	void loginSuccessTest() throws Exception {
 		//given
 		userService.addUser(userSaveForm.toEntity());
-		LoginForm loginForm = new LoginForm(userSaveForm.getLoginId(), userSaveForm.getPassword());
+		LoginRequest loginForm = new LoginRequest(userSaveForm.getLoginId(),
+			userSaveForm.getPassword());
 		//when
 		User loginUser = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
 		mockMvc.perform(post("/login")
@@ -108,7 +109,7 @@ class LoginControllerTest {
 	void postNotFoundId() throws Exception {
 		//given
 		User user = userService.addUser(userSaveForm.toEntity());
-		LoginForm loginForm = new LoginForm("invalid,", "invalid");
+		LoginRequest loginForm = new LoginRequest("invalid,", "invalid");
 		//when
 		mockMvc.perform(post("/login")
 				.accept(MediaType.APPLICATION_JSON)
@@ -125,7 +126,7 @@ class LoginControllerTest {
 	void postNotFoundPassword() throws Exception {
 		//given
 		User user = userService.addUser(userSaveForm.toEntity());
-		LoginForm loginForm = new LoginForm(user.getLoginId(), "invalid");
+		LoginRequest loginForm = new LoginRequest(user.getLoginId(), "invalid");
 		//when
 		mockMvc.perform(post("/login")
 				.accept(MediaType.APPLICATION_JSON)
