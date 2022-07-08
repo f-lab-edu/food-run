@@ -21,17 +21,17 @@ public class LoginService {
 	private final PasswordEncoder passwordEncoder;
 
 	public User login(String loginId, String inputPassword) {
-		User findUser = userMapper.selectUserByLoginId(loginId)
+		User foundUser = userMapper.selectUserByLoginId(loginId)
 			.orElseThrow(LoginIdNotFoundException::new);
 
-		if (isCheckedPassword(inputPassword, findUser.getPassword())) {
-			return findUser;
+		if (isCheckedPassword(inputPassword, foundUser.getPassword())) {
+			return foundUser;
 		} else {
 			throw new InvalidPasswordException();
 		}
 	}
 
-	private boolean isCheckedPassword(String inputPassword, String findUserPassword) {
-		return passwordEncoder.matches(inputPassword, findUserPassword);
+	private boolean isCheckedPassword(String password, String foundUserPassword) {
+		return passwordEncoder.matches(password, foundUserPassword);
 	}
 }
