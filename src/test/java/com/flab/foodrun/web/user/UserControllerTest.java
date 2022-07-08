@@ -14,7 +14,7 @@ import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
 import com.flab.foodrun.domain.user.service.UserService;
-import com.flab.foodrun.web.user.form.UserSaveForm;
+import com.flab.foodrun.web.user.dto.UserSaveForm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

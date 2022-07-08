@@ -1,4 +1,4 @@
-package com.flab.foodrun.web.user.form;
+package com.flab.foodrun.web.user.dto;
 
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;

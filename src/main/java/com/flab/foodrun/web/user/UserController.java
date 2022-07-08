@@ -2,7 +2,7 @@ package com.flab.foodrun.web.user;
 
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.service.UserService;
-import com.flab.foodrun.web.user.form.UserSaveForm;
+import com.flab.foodrun.web.user.dto.UserSaveForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -13,7 +13,7 @@ import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.dao.UserMapper;
 import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
-import com.flab.foodrun.web.user.form.UserSaveForm;
+import com.flab.foodrun.web.user.dto.UserSaveForm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
