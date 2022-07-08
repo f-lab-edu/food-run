@@ -74,8 +74,7 @@ class UserControllerTest {
 			.andDo(print())
 			.andExpect(status().isCreated())
 			.andExpect(jsonPath("$.loginId").value("testLoginId"))
-			.andExpect(jsonPath("$.name").value("testName"))
-			.andExpect(jsonPath("$.email").value("test@gmail.com"));
+			.andExpect(jsonPath("$.name").value("testName"));
 	}
 
 	@Test
