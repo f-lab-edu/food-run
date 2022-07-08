@@ -1,4 +1,4 @@
-package com.flab.foodrun.web.login.form;
+package com.flab.foodrun.web.login.dto;
 
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class LoginForm {
+public class LoginRequest {
 
 	@NotBlank
 	private String loginId;

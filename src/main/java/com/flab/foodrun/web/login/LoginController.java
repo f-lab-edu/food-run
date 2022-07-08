@@ -3,8 +3,8 @@ package com.flab.foodrun.web.login;
 import com.flab.foodrun.domain.login.service.LoginService;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.web.SessionConst;
-import com.flab.foodrun.web.login.form.LoginForm;
-import com.flab.foodrun.web.login.form.LoginResponseForm;
+import com.flab.foodrun.web.login.dto.LoginRequest;
+import com.flab.foodrun.web.login.dto.LoginResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +26,11 @@ public class LoginController {
 	private final LoginService loginService;
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginResponseForm> login(@Validated @RequestBody LoginForm loginForm,
+	public ResponseEntity<LoginResponse> login(@Validated @RequestBody LoginRequest loginForm,
 		@NotNull HttpSession session) {
 
 		User loginUser = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
-		LoginResponseForm responseForm = LoginResponseForm.builder()
-			.loginId(loginUser.getLoginId())
-			.name(loginUser.getName())
-			.phoneNumber(loginUser.getPhoneNumber())
-			.build();
-
 		session.setAttribute(SessionConst.LOGIN_SESSION, loginUser.getLoginId());
-		return new ResponseEntity<>(responseForm, HttpStatus.OK);
+		return new ResponseEntity<>(LoginResponse.getBuild(loginUser), HttpStatus.OK);
 	}
 }
