@@ -3,6 +3,7 @@ package com.flab.foodrun.web.user;
 import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.DUPLICATED_USER_ID_EX_MESSAGE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -25,6 +26,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  * @SpringBootTest : 스프링 부트 기반 테스트를 실행하는 테스트 클래스에 지정할 수 있는 주석.
@@ -61,6 +63,19 @@ class UserControllerTest {
 	}
 
 	@Test
+	@DisplayName("PATCH /users 이동할 때 인증 안 되어 있으면 거부")
+	void modifyUserAccessTest() throws Exception {
+		//given
+		//when
+		mvc.perform(patch("/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+			//then
+			.andDo(print())
+			.andExpect(status().isBadRequest());
+	}
+
+	@Test
 	@DisplayName("회원가입 성공 시 201 상태코드 리턴")
 	void addUserSuccess() throws Exception {
 		//given
@@ -73,8 +88,10 @@ class UserControllerTest {
 			//then
 			.andDo(print())
 			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.loginId").value("testLoginId"))
-			.andExpect(jsonPath("$.name").value("testName"));
+			.andExpect(jsonPath("$.loginId").value(userSaveRequest.getLoginId()))
+			.andExpect(jsonPath("$.name").value(userSaveRequest.getName()))
+			.andExpect(jsonPath("$.phoneNumber").value(userSaveRequest.getPhoneNumber()))
+			.andExpect(jsonPath("$.role").value(String.valueOf(userSaveRequest.getRole())));
 	}
 
 	@Test
