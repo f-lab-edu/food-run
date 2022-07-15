@@ -3,7 +3,7 @@ package com.flab.foodrun.web.login.dto;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 /**
  * @Getter : getter 메서드 자동 생성 애노테이션
@@ -12,8 +12,8 @@ import lombok.Setter;
  */
 
 @Getter
-@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class LoginRequest {
 
 	@NotBlank
