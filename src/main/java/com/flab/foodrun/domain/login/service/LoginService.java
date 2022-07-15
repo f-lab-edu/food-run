@@ -21,11 +21,11 @@ public class LoginService {
 	private final PasswordEncoder passwordEncoder;
 
 	public User login(String loginId, String inputPassword) {
-		User foundUser = userMapper.selectUserByLoginId(loginId)
+		User user = userMapper.selectUserByLoginId(loginId)
 			.orElseThrow(LoginIdNotFoundException::new);
 
-		if (isCheckedPassword(inputPassword, foundUser.getPassword())) {
-			return foundUser;
+		if (isCheckedPassword(inputPassword, user.getPassword())) {
+			return user;
 		} else {
 			throw new InvalidPasswordException();
 		}
