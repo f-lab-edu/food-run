@@ -2,12 +2,9 @@ package com.flab.foodrun.web.login;
 
 import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.INVALID_PASSWORD_EX_MESSAGE;
 import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.LOGIN_ID_NOT_FOUND_EX_MESSAGE;
-import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.UNAUTHENTICATED_USER_EX_MESSAGE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.foodrun.domain.login.service.LoginService;
@@ -85,22 +82,6 @@ class LoginControllerTest {
 			.andExpect(jsonPath("$.loginId").value(loginUser.getLoginId()))
 			.andExpect(jsonPath("$.name").value(loginUser.getName()))
 			.andExpect(jsonPath("$.phoneNumber").value(loginUser.getPhoneNumber()))
-		;
-	}
-
-	@Test
-	@DisplayName("로그인 세션이 NULL 일 때")
-	void notLogin() throws Exception {
-		//given
-		//when
-		mockMvc.perform(get("/")
-				.session(mockSession)
-				.accept(MediaType.APPLICATION_JSON)
-				.contentType(MediaType.APPLICATION_JSON))
-			//then
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.code").value("UnauthenticatedUserAccessException"))
-			.andExpect(jsonPath("$.message").value(UNAUTHENTICATED_USER_EX_MESSAGE))
 		;
 	}
 
