@@ -31,7 +31,7 @@ public class UserController {
 		@Validated @RequestBody UserSaveRequest userSaveRequest) {
 
 		User newUser = userService.addUser(userSaveRequest.toEntity());
-		return new ResponseEntity<>(UserSaveResponse.getBuild(newUser),
+		return new ResponseEntity<>(UserSaveResponse.from(newUser),
 			HttpStatus.CREATED);
 	}
 

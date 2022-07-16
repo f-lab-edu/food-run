@@ -12,7 +12,7 @@ public class LoginResponse {
 	private String name;
 	private String phoneNumber;
 
-	public static LoginResponse getBuild(User loginUser) {
+	public static LoginResponse from(User loginUser) {
 		return LoginResponse.builder()
 			.loginId(loginUser.getLoginId())
 			.name(loginUser.getName())

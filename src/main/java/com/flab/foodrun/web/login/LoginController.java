@@ -31,6 +31,6 @@ public class LoginController {
 
 		User loginUser = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
 		session.setAttribute(SessionConst.LOGIN_SESSION, loginUser.getLoginId());
-		return new ResponseEntity<>(LoginResponse.getBuild(loginUser), HttpStatus.OK);
+		return new ResponseEntity<>(LoginResponse.from(loginUser), HttpStatus.OK);
 	}
 }

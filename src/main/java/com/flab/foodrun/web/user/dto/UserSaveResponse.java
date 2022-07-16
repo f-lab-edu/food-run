@@ -14,7 +14,7 @@ public class UserSaveResponse {
 	private String phoneNumber;
 	private Role role;
 
-	public static UserSaveResponse getBuild(User user) {
+	public static UserSaveResponse from(User user) {
 		return UserSaveResponse.builder()
 			.loginId(user.getLoginId())
 			.name(user.getName())
