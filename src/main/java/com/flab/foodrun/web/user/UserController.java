@@ -2,12 +2,14 @@ package com.flab.foodrun.web.user;
 
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.service.UserService;
-import com.flab.foodrun.web.user.form.UserSaveForm;
+import com.flab.foodrun.web.user.dto.UserSaveRequest;
+import com.flab.foodrun.web.user.dto.UserSaveResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +27,16 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping
-	public ResponseEntity<User> addUser(@Validated @RequestBody UserSaveForm form) {
-		return new ResponseEntity<>(userService.addUser(form), HttpStatus.CREATED);
+	public ResponseEntity<UserSaveResponse> addUser(
+		@Validated @RequestBody UserSaveRequest userSaveRequest) {
+
+		User newUser = userService.addUser(userSaveRequest.toEntity());
+		return new ResponseEntity<>(UserSaveResponse.from(newUser),
+			HttpStatus.CREATED);
+	}
+
+	@PatchMapping
+	public void modifyUser(@RequestBody UserSaveRequest userSaveRequest) {
+		//TODO
 	}
 }

@@ -6,6 +6,7 @@ import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,6 +39,7 @@ class UserMapperTest {
 	}
 
 	@Test
+	@DisplayName("User 객체 insert 쿼리 테스트")
 	void insertUser() {
 		//given
 		int saveCount = 0;
@@ -53,6 +55,7 @@ class UserMapperTest {
 	}
 
 	@Test
+	@DisplayName("특정 로그인 아이디를 검색하면 카운트 여부 확인")
 	void countUserId() {
 		//given
 		userMapper.insertUser(user1);
@@ -63,17 +66,30 @@ class UserMapperTest {
 	}
 
 	@Test
+	@DisplayName("id(sequence)로 User 객체 정상적으로 반환되는지 확인")
 	void findById() {
 		//given
 		userMapper.insertUser(user1);
 		userMapper.insertUser(user2);
 		//when
-		User findUser1 = (userMapper.selectUserByLoginId(
+		User findUser1 = (userMapper.selectUserById(
 			Math.toIntExact(user1.getId()))).orElseThrow();
-		User findUser2 = (userMapper.selectUserByLoginId(
+		User findUser2 = (userMapper.selectUserById(
 			Math.toIntExact(user2.getId()))).orElseThrow();
 		//then
 		assertThat(findUser1.getLoginId()).isEqualTo(user1.getLoginId());
 		assertThat(findUser2.getLoginId()).isEqualTo(user2.getLoginId());
+	}
+
+	@Test
+	@DisplayName("loginId로 User 객체 정상적으로 반환되는지 확인")
+	void selectUserByLoginId(){
+		//given
+		userMapper.insertUser(user1);
+		//when
+		User findUser = userMapper.selectUserByLoginId(user1.getLoginId()).orElseThrow();
+		//then
+		assertThat(findUser.getLoginId()).isEqualTo(user1.getLoginId());
+		assertThat(findUser.getName()).isEqualTo(user1.getName());
 	}
 }

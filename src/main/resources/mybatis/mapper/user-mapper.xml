@@ -5,6 +5,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.flab.foodrun.domain.user.dao.UserMapper">
+
+  <resultMap id="userMap" type="com.flab.foodrun.domain.user.User">
+    <result column="login_id" property="loginId" jdbcType="VARCHAR" javaType="String"/>
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" javaType="String"/>
+  </resultMap>
+
   <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
     INSERT INTO user(login_id,
                      password,
@@ -32,10 +38,19 @@
     WHERE login_id = #{loginId};
   </select>
 
-  <resultMap id="userMap" type="com.flab.foodrun.domain.user.User">
-    <result column="login_id" property="loginId" jdbcType="VARCHAR" javaType="String"/>
-    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" javaType="String"/>
-  </resultMap>
+  <select id="selectUserById" resultType="com.flab.foodrun.domain.user.User"
+    resultMap="userMap">
+    SELECT id,
+           login_id,
+           password,
+           name,
+           role,
+           status,
+           phone_number,
+           email
+    FROM user
+    WHERE id = #{id};
+  </select>
 
   <select id="selectUserByLoginId" resultType="com.flab.foodrun.domain.user.User"
     resultMap="userMap">
@@ -48,6 +63,6 @@
            phone_number,
            email
     FROM user
-    WHERE id = #{id};
+    WHERE login_id = #{loginId}
   </select>
 </mapper>

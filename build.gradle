@@ -3,7 +3,6 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'jacoco'
-    id "org.sonarqube" version "3.4.0.2513"
 }
 
 // jacoco 버전
@@ -17,10 +16,19 @@ test {
      * 테스트 할 때 JaCoCo 를 함께 실행하도록 구성.
      * 개별 테스트 실행 시 covered ratio 가 낮게 나오기 때문에 전체 테스트일 때만 finalizedBy 주석을 제거한다.
      */
-    // finalizedBy 'jacocoTestReport'
+     finalizedBy 'jacocoTestReport'
 }
 
 jacocoTestReport {
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "com/flab/foodrun/**Application.class",
+            ])
+        }))
+    }
+
     // html, xml 파일을 남기도록 설정
     // xml 파일 남기는 이유는 sonarqube 연동을 위함.
     reports {
@@ -39,6 +47,15 @@ jacocoTestReport {
 
 // 테스트 커버리지 기준을 설정할 수 있는 부분
 jacocoTestCoverageVerification {
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "com/flab/foodrun/**Application.class",
+            ])
+        }))
+    }
+
     violationRules {
         rule {
             enabled = true

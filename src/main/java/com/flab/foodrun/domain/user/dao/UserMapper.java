@@ -5,7 +5,7 @@ import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * MyBatis는 최소 하나의 SqlSessionFactory와 Mapper Interface가 필요 Mapper Interface 를 만들어주는 애노테이션
+ * @Mapper: MyBatis는 최소 하나의 SqlSessionFactory와 Mapper Interface가 필요 Mapper Interface 를 만들어주는 애노테이션
  */
 @Mapper
 public interface UserMapper {
@@ -14,5 +14,7 @@ public interface UserMapper {
 
 	int countByLoginId(String loginId);
 
-	Optional<User> selectUserByLoginId(int id);
+	Optional<User> selectUserById(int id);
+
+	Optional<User> selectUserByLoginId(String loginId);
 }
