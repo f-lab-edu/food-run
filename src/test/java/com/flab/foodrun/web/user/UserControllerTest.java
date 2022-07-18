@@ -1,8 +1,7 @@
 package com.flab.foodrun.web.user;
 
 import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.DUPLICATED_USER_ID_EX_MESSAGE;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -11,10 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.foodrun.domain.user.Role;
-import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
-import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
 import com.flab.foodrun.domain.user.service.UserService;
+import com.flab.foodrun.web.SessionConst;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +40,7 @@ class UserControllerTest {
 	@Autowired
 	MockMvc mvc;
 
-	@MockBean
+	@Autowired
 	UserService userService;
 
 	ObjectMapper mapper = new ObjectMapper();
@@ -51,7 +49,7 @@ class UserControllerTest {
 	@BeforeEach
 	void initFormData() {
 		userSaveRequest = UserSaveRequest.builder()
-			.loginId("testLoginId")
+			.loginId("userControllerTestId")
 			.password("testPassword")
 			.name("testName")
 			.role(Role.CLIENT)
@@ -79,7 +77,6 @@ class UserControllerTest {
 	@DisplayName("회원가입 성공 시 201 상태코드 리턴")
 	void addUserSuccess() throws Exception {
 		//given
-		given(userService.addUser(any(User.class))).willReturn(userSaveRequest.toEntity());
 		//when
 		mvc.perform(post("/users")
 				.content(mapper.writeValueAsString(userSaveRequest))
@@ -102,8 +99,6 @@ class UserControllerTest {
 			.loginId("testLoginIdFail")
 			.password("testPassword").build();
 
-		given(userService.addUser(any(User.class))).willReturn(userSaveRequest.toEntity());
-
 		//when
 		mvc.perform(post("/users")
 				.content(mapper.writeValueAsString(userSaveRequest))
@@ -119,8 +114,7 @@ class UserControllerTest {
 	@DisplayName("중복아이디 입력 시 런타임 예외 출력")
 	void duplicatedUserIdPost() throws Exception {
 		//given
-		given(userService.addUser(any(User.class))).willThrow(
-			DuplicatedUserIdException.class);
+		userService.addUser(userSaveRequest.from());
 		//when
 		mvc.perform(post("/users")
 				.content(mapper.writeValueAsString(userSaveRequest))
@@ -129,6 +123,27 @@ class UserControllerTest {
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.code").value("DuplicatedUserIdException"))
 			.andExpect(jsonPath("$.message").value(DUPLICATED_USER_ID_EX_MESSAGE))
+			.andDo(print());
+	}
+
+	@Test
+	@DisplayName("회원 아이디로 회원 정보 찾기")
+	void findUserId() throws Exception {
+		//given
+		userService.addUser(userSaveRequest.from());
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute(SessionConst.LOGIN_SESSION, userSaveRequest.getLoginId());
+
+		//when
+		mvc.perform(get("/users/" + userSaveRequest.getLoginId())
+				.session(session))
+
+			//then
+			.andExpect(jsonPath("$.loginId").value(userSaveRequest.getLoginId()))
+			.andExpect(jsonPath("$.name").value(userSaveRequest.getName()))
+			.andExpect(jsonPath("$.role").value(String.valueOf(userSaveRequest.getRole())))
+			.andExpect(jsonPath("$.phoneNumber").value(userSaveRequest.getPhoneNumber()))
+			.andExpect(jsonPath("$.email").value(userSaveRequest.getEmail()))
 			.andDo(print());
 	}
 }
