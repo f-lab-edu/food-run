@@ -83,7 +83,7 @@ class UserMapperTest {
 
 	@Test
 	@DisplayName("loginId로 User 객체 정상적으로 반환되는지 확인")
-	void selectUserByLoginId(){
+	void selectUserByLoginId() {
 		//given
 		userMapper.insertUser(user1);
 		//when
@@ -91,5 +91,25 @@ class UserMapperTest {
 		//then
 		assertThat(findUser.getLoginId()).isEqualTo(user1.getLoginId());
 		assertThat(findUser.getName()).isEqualTo(user1.getName());
+	}
+
+	@Test
+	@DisplayName("회원 정보 변경 테스트")
+	void updateUserInfo() {
+		//given
+		userMapper.insertUser(user1);
+		User user = userMapper.selectUserByLoginId(user1.getLoginId()).orElseThrow(null);
+		user.setName("modifiedName");
+		user.setEmail("modify@test.com");
+
+		//when
+		userMapper.updateUserByLoginId(user.getLoginId());
+
+		//then
+		assertThat(user.getName()).isEqualTo("modifiedName");
+		assertThat(user.getEmail()).isEqualTo("modify@test.com");
+
+		//수정하지 않은 필드에 대해서는 값 유지되는지 확인
+		assertThat(user.getPhoneNumber()).isEqualTo(user1.getPhoneNumber());
 	}
 }
