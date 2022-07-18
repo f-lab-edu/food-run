@@ -2,6 +2,7 @@ package com.flab.foodrun.domain.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
@@ -17,7 +18,9 @@ import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -69,8 +72,8 @@ class UserServiceTest {
 		when(mockUserMapper.insertUser(any(User.class))).thenReturn(1);
 
 		//when
-		User findUser1 = userService.addUser(formList.get(0).toEntity());
-		User findUser2 = userService.addUser(formList.get(1).toEntity());
+		User findUser1 = userService.addUser(formList.get(0).from());
+		User findUser2 = userService.addUser(formList.get(1).from());
 
 		//then
 		verify(mockUserMapper, times(2)).countByLoginId(anyString());
@@ -87,8 +90,28 @@ class UserServiceTest {
 		//when
 		//then
 		verify(mockUserMapper, times(0)).countByLoginId(anyString());
-		var form = formList.get(0);
-		assertThatThrownBy(() -> userService.addUser(form.toEntity())).isInstanceOf(
+		var form = formList.get(0).from();
+		assertThatThrownBy(() -> userService.addUser(form)).isInstanceOf(
 			DuplicatedUserIdException.class);
+	}
+
+	@Test
+	@DisplayName("아이디 입력해서 유저 정보 찾기")
+	void findUser() {
+		//given
+		UserSaveRequest testRequest = formList.get(0);
+		User user = testRequest.from();
+		String testLoginId = testRequest.getLoginId();
+		given(mockUserMapper.selectUserByLoginId(testLoginId)).willReturn(
+			Optional.ofNullable(user));
+
+		//when
+		User whenUser = userService.findUser(testLoginId);
+
+		//then
+		verify(mockUserMapper, times(1)).selectUserByLoginId(testLoginId);
+		assertThat(whenUser.getLoginId()).isEqualTo(testLoginId);
+		assert user != null;
+		assertThat(whenUser.getPhoneNumber()).isEqualTo(user.getPhoneNumber());
 	}
 }

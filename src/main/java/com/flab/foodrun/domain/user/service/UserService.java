@@ -1,5 +1,6 @@
 package com.flab.foodrun.domain.user.service;
 
+import com.flab.foodrun.domain.login.exception.LoginIdNotFoundException;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.dao.UserMapper;
 import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
@@ -27,4 +28,11 @@ public class UserService {
 		userMapper.insertUser(user);
 		return user;
 	}
+
+	public User findUser(String loginId) {
+		return userMapper.selectUserByLoginId(loginId)
+			.orElseThrow(LoginIdNotFoundException::new);
+	}
+
+
 }
