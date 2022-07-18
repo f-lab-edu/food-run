@@ -65,4 +65,13 @@
     FROM user
     WHERE login_id = #{loginId}
   </select>
+
+  <update id="updateUserByLoginId">
+    UPDATE user
+    SET
+        name = #{name},
+        phone_number = #{phoneNumber},
+        email = #{email}
+    WHERE login_id = #{loginId}
+  </update>
 </mapper>
