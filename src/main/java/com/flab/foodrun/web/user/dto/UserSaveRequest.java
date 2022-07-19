@@ -45,7 +45,7 @@ public class UserSaveRequest {
 	@NotBlank(message = "{detailAddress.notBlank}")
 	private String detailAddress;
 
-	public User from() {
+	public User toEntity() {
 		return User.builder()
 			.loginId(this.getLoginId())
 			.password(this.getPassword())

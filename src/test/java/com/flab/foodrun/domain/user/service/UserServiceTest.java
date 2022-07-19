@@ -72,8 +72,8 @@ class UserServiceTest {
 		when(mockUserMapper.insertUser(any(User.class))).thenReturn(1);
 
 		//when
-		User findUser1 = userService.addUser(formList.get(0).from());
-		User findUser2 = userService.addUser(formList.get(1).from());
+		User findUser1 = userService.addUser(formList.get(0).toEntity());
+		User findUser2 = userService.addUser(formList.get(1).toEntity());
 
 		//then
 		verify(mockUserMapper, times(2)).countByLoginId(anyString());
@@ -90,7 +90,7 @@ class UserServiceTest {
 		//when
 		//then
 		verify(mockUserMapper, times(0)).countByLoginId(anyString());
-		var form = formList.get(0).from();
+		var form = formList.get(0).toEntity();
 		assertThatThrownBy(() -> userService.addUser(form)).isInstanceOf(
 			DuplicatedUserIdException.class);
 	}
@@ -99,9 +99,9 @@ class UserServiceTest {
 	@DisplayName("아이디 입력해서 유저 정보 찾기")
 	void findUser() {
 		//given
-		UserSaveRequest testRequest = formList.get(0);
-		User user = testRequest.from();
-		String testLoginId = testRequest.getLoginId();
+		UserSaveRequest request = formList.get(0);
+		User user = request.toEntity();
+		String testLoginId = request.getLoginId();
 		given(mockUserMapper.selectUserByLoginId(testLoginId)).willReturn(
 			Optional.ofNullable(user));
 
