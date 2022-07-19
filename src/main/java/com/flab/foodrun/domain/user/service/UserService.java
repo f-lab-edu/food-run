@@ -34,5 +34,9 @@ public class UserService {
 			.orElseThrow(LoginIdNotFoundException::new);
 	}
 
-
+	public User modifyUser(User user) {
+		userMapper.updateUser(user);
+		log.info("update info:{}, {}, {}", user.getId(), user.getPassword(), user.getEmail());
+		return user;
+	}
 }
