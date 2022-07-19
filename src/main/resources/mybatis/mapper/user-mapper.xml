@@ -66,12 +66,11 @@
     WHERE login_id = #{loginId}
   </select>
 
-  <update id="updateUserByLoginId">
+  <update id="updateUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
     UPDATE user
-    SET
-        name = #{name},
-        phone_number = #{phoneNumber},
-        email = #{email}
-    WHERE login_id = #{loginId}
+    SET name         = IFNULL(#{name}, name),
+        phone_number = IFNULL(#{phoneNumber}, phone_number),
+        email        = IFNULL(#{email}, email)
+    WHERE id = #{id}
   </update>
 </mapper>
