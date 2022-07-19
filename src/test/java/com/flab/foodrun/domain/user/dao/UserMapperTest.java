@@ -73,9 +73,9 @@ class UserMapperTest {
 		userMapper.insertUser(user2);
 		//when
 		User findUser1 = (userMapper.selectUserById(
-			Math.toIntExact(user1.getId()))).orElseThrow();
+			user1.getId())).orElseThrow();
 		User findUser2 = (userMapper.selectUserById(
-			Math.toIntExact(user2.getId()))).orElseThrow();
+			user2.getId())).orElseThrow();
 		//then
 		assertThat(findUser1.getLoginId()).isEqualTo(user1.getLoginId());
 		assertThat(findUser2.getLoginId()).isEqualTo(user2.getLoginId());
@@ -98,18 +98,16 @@ class UserMapperTest {
 	void updateUserInfo() {
 		//given
 		userMapper.insertUser(user1);
-		User user = userMapper.selectUserByLoginId(user1.getLoginId()).orElseThrow(null);
-		user.setName("modifiedName");
-		user.setEmail("modify@test.com");
+		User user = userMapper.selectUserById(user1.getId()).orElseThrow();
+		user.setName("modTestName");
+		user.setEmail("mod@gmail.com");
 
 		//when
-		userMapper.updateUserByLoginId(user.getLoginId());
+		int count = userMapper.updateUser(user);
 
 		//then
-		assertThat(user.getName()).isEqualTo("modifiedName");
-		assertThat(user.getEmail()).isEqualTo("modify@test.com");
-
-		//수정하지 않은 필드에 대해서는 값 유지되는지 확인
-		assertThat(user.getPhoneNumber()).isEqualTo(user1.getPhoneNumber());
+		assertThat(count).isEqualTo(1);
+		assertThat(user.getName()).isEqualTo("modTestName");
+		assertThat(user.getEmail()).isEqualTo("mod@gmail.com");
 	}
 }
