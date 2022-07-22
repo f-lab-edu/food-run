@@ -13,6 +13,7 @@ import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.service.UserService;
 import com.flab.foodrun.web.SessionConst;
+import com.flab.foodrun.web.user.dto.UserModifyRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -114,7 +115,7 @@ class UserControllerTest {
 	@DisplayName("중복아이디 입력 시 런타임 예외 출력")
 	void duplicatedUserIdPost() throws Exception {
 		//given
-		userService.addUser(userSaveRequest.from());
+		userService.addUser(userSaveRequest);
 		//when
 		mvc.perform(post("/users")
 				.content(mapper.writeValueAsString(userSaveRequest))
@@ -130,7 +131,7 @@ class UserControllerTest {
 	@DisplayName("회원 아이디로 회원 정보 찾기")
 	void findUserId() throws Exception {
 		//given
-		userService.addUser(userSaveRequest.from());
+		userService.addUser(userSaveRequest);
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute(SessionConst.LOGIN_SESSION, userSaveRequest.getLoginId());
 
@@ -145,5 +146,39 @@ class UserControllerTest {
 			.andExpect(jsonPath("$.phoneNumber").value(userSaveRequest.getPhoneNumber()))
 			.andExpect(jsonPath("$.email").value(userSaveRequest.getEmail()))
 			.andDo(print());
+	}
+
+	@Test
+	@DisplayName("회원 정보 수정")
+	void modifyUser() throws Exception {
+		//given
+
+		mvc.perform(post("/users")
+			.content(mapper.writeValueAsString(userSaveRequest))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON));
+
+		UserModifyRequest modifyRequest = UserModifyRequest.builder()
+			.loginId(userSaveRequest.getLoginId())
+			.name("test-modify-name")
+			.email("modify@gmail.com")
+			.phoneNumber("010-2222-2222")
+			.build();
+
+		MockHttpSession session = new MockHttpSession();
+		session.setAttribute(SessionConst.LOGIN_SESSION, userSaveRequest.getLoginId());
+
+		//when
+		mvc.perform(patch("/users")
+				.session(session)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(mapper.writeValueAsString(modifyRequest)))
+			//then
+			.andDo(print())
+			.andExpect(jsonPath("$.loginId").value(userSaveRequest.getLoginId()))
+			.andExpect(jsonPath("$.phoneNumber").value(modifyRequest.getPhoneNumber()))
+			.andExpect(jsonPath("$.email").value(modifyRequest.getEmail()))
+			.andExpect(jsonPath("$.name").value(modifyRequest.getName()));
 	}
 }

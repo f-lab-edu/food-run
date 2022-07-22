@@ -3,6 +3,7 @@ package com.flab.foodrun.web.user;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.service.UserService;
 import com.flab.foodrun.web.user.dto.UserInfoResponse;
+import com.flab.foodrun.web.user.dto.UserModifyRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import com.flab.foodrun.web.user.dto.UserSaveResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,20 +34,22 @@ public class UserController {
 	public ResponseEntity<UserSaveResponse> addUser(
 		@Validated @RequestBody UserSaveRequest userSaveRequest) {
 
-		User newUser = userService.addUser(userSaveRequest.from());
+		User newUser = userService.addUser(userSaveRequest);
 		return new ResponseEntity<>(UserSaveResponse.from(newUser),
 			HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{loginId}")
-	public ResponseEntity<UserInfoResponse> getUserInfo(@PathVariable String loginId) {
+	public ResponseEntity<UserInfoResponse> getUser(@PathVariable String loginId) {
 		User user = userService.findUser(loginId);
 		return new ResponseEntity<>(UserInfoResponse.from(user), HttpStatus.OK);
 	}
 
-	@PatchMapping("/{loginId}")
-	public ResponseEntity<UserInfoResponse> modifyUser(@PathVariable String loginId) {
-		User user = userService.findUser(loginId);
+	@PatchMapping
+	public ResponseEntity<UserInfoResponse> modifyUser(
+		@RequestBody UserModifyRequest userModifyRequest) {
+
+		User user = userService.modifyUser(userModifyRequest);
 		return new ResponseEntity<>(UserInfoResponse.from(user), HttpStatus.OK);
 	}
 }
