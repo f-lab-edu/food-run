@@ -9,6 +9,10 @@
   <resultMap id="userMap" type="com.flab.foodrun.domain.user.User">
     <result column="login_id" property="loginId" jdbcType="VARCHAR" javaType="String"/>
     <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" javaType="String"/>
+    <result column="created_at" property="createdAt"/>
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" javaType="String"/>
+    <result column="modified_at" property="modifiedAt"/>
+    <result column="modified_by" property="modifiedBy" jdbcType="VARCHAR" javaType="String"/>
   </resultMap>
 
   <insert id="insertUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
@@ -28,7 +32,7 @@
             #{status},
             #{phoneNumber},
             #{email},
-            NOW(),
+            #{createdAt},
             #{createdBy})
   </insert>
 
@@ -54,15 +58,17 @@
 
   <select id="selectUserByLoginId" resultType="com.flab.foodrun.domain.user.User"
     resultMap="userMap">
-    SELECT id,
-           login_id,
-           password,
-           name,
-           role,
-           status,
-           phone_number,
-           email
+    SELECT *
     FROM user
     WHERE login_id = #{loginId}
   </select>
+
+  <update id="updateUser" useGeneratedKeys="true" keyProperty="id" parameterType="User">
+    UPDATE user
+    SET name         = IFNULL(#{name}, name),
+        phone_number = IFNULL(#{phoneNumber}, phone_number),
+        email        = IFNULL(#{email}, email),
+        modified_at  = #{modifiedAt}
+    WHERE id = #{id}
+  </update>
 </mapper>

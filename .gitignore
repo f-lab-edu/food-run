@@ -1,7 +1,7 @@
 HELP.md
 .gradle
 build/*
-!build/reports/jacoco/test
+#!build/reports/jacoco/test
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,13 +29,13 @@ class UserMapperTest {
 		user1 = User.builder()
 			.loginId("test").password("testPassword").name("testName").role(Role.CLIENT)
 			.status(UserStatus.ACTIVE).phoneNumber("01012345678").email("test@gmail.com")
-			.createdBy("testCreatedBy")
+			.createdBy("testCreatedBy").createdAt(LocalDateTime.now())
 			.build();
 
 		user2 = User.builder()
 			.loginId("test2").password("testPassword2").name("testName2").role(Role.CLIENT)
 			.status(UserStatus.ACTIVE).phoneNumber("01012345671").email("test2@gmail.com")
-			.createdBy("test2CreatedBy")
+			.createdBy("test2CreatedBy").createdAt(LocalDateTime.now())
 			.build();
 	}
 
@@ -73,9 +74,9 @@ class UserMapperTest {
 		userMapper.insertUser(user2);
 		//when
 		User findUser1 = (userMapper.selectUserById(
-			Math.toIntExact(user1.getId()))).orElseThrow();
+			user1.getId())).orElseThrow();
 		User findUser2 = (userMapper.selectUserById(
-			Math.toIntExact(user2.getId()))).orElseThrow();
+			user2.getId())).orElseThrow();
 		//then
 		assertThat(findUser1.getLoginId()).isEqualTo(user1.getLoginId());
 		assertThat(findUser2.getLoginId()).isEqualTo(user2.getLoginId());
@@ -83,7 +84,7 @@ class UserMapperTest {
 
 	@Test
 	@DisplayName("loginId로 User 객체 정상적으로 반환되는지 확인")
-	void selectUserByLoginId(){
+	void selectUserByLoginId() {
 		//given
 		userMapper.insertUser(user1);
 		//when
@@ -91,5 +92,23 @@ class UserMapperTest {
 		//then
 		assertThat(findUser.getLoginId()).isEqualTo(user1.getLoginId());
 		assertThat(findUser.getName()).isEqualTo(user1.getName());
+	}
+
+	@Test
+	@DisplayName("회원 정보 변경 테스트")
+	void updateUserInfo() {
+		//given
+		userMapper.insertUser(user1);
+		User user = userMapper.selectUserById(user1.getId()).orElseThrow();
+		user.setName("modTestName");
+		user.setEmail("mod@gmail.com");
+
+		//when
+		int count = userMapper.updateUser(user);
+
+		//then
+		assertThat(count).isEqualTo(1);
+		assertThat(user.getName()).isEqualTo("modTestName");
+		assertThat(user.getEmail()).isEqualTo("mod@gmail.com");
 	}
 }

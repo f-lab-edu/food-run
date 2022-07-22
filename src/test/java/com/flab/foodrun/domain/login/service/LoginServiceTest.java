@@ -27,12 +27,12 @@ class LoginServiceTest {
 	@Autowired
 	UserService userService;
 
-	UserSaveRequest testUser;
+	UserSaveRequest testUserRequest;
 
 	@BeforeEach
 	void initData() {
 		/*테스트용 userSaveForm() 데이터 설정*/
-		testUser = UserSaveRequest.builder()
+		testUserRequest = UserSaveRequest.builder()
 			.loginId("testLoginId2")
 			.password("testLoginPassword")
 			.name("testName")
@@ -49,26 +49,26 @@ class LoginServiceTest {
 	@DisplayName("입력된 비밀번호를 바탕으로 로그인 정보를 가져오는지 확인")
 	void login() {
 		//given
-		userService.addUser(testUser.toEntity());
+		userService.addUser(testUserRequest);
 
 		//when
-		User loginUser = loginService.login(testUser.getLoginId(), testUser.getPassword());
+		User loginUser = loginService.login(testUserRequest.getLoginId(),
+			"testLoginPassword");
 
 		//then
-		assertThat(loginUser.getPassword()).isNotEqualTo(testUser.getPassword());
-		assertThat(loginUser.getLoginId()).isEqualTo(testUser.getLoginId());
-		assertThat(loginUser.getName()).isEqualTo(testUser.getName());
-		assertThat(loginUser.getEmail()).isEqualTo(testUser.getEmail());
+		assertThat(loginUser.getLoginId()).isEqualTo(testUserRequest.getLoginId());
+		assertThat(loginUser.getName()).isEqualTo(testUserRequest.getName());
+		assertThat(loginUser.getEmail()).isEqualTo(testUserRequest.getEmail());
 		assertThat(loginUser.getRole()).isEqualTo(Role.CLIENT);
 		assertThat(loginUser.getStatus()).isEqualTo(UserStatus.ACTIVE);
-		assertThat(loginUser.getPhoneNumber()).isEqualTo(testUser.getPhoneNumber());
+		assertThat(loginUser.getPhoneNumber()).isEqualTo(testUserRequest.getPhoneNumber());
 	}
 
 	@Test
 	@DisplayName("아이디 못 찾을 때 예외 호출되는지 확인")
 	void notFoundLoginId() {
 		//given
-		userService.addUser(testUser.toEntity());
+		userService.addUser(testUserRequest);
 		String loginId = "Invalid-LoginId";
 		//when
 		assertThatThrownBy(() -> {
@@ -81,8 +81,8 @@ class LoginServiceTest {
 	@DisplayName("비밀번호 틀릴 때 예외 호출되는지 확인")
 	void invalidPassword() {
 		//given
-		userService.addUser(testUser.toEntity());
-		String loginId = testUser.getLoginId();
+		userService.addUser(testUserRequest);
+		String loginId = testUserRequest.getLoginId();
 		String password = "wrong-password";
 		//when
 		assertThatThrownBy(() -> {
