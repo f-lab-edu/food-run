@@ -2,6 +2,7 @@ package com.flab.foodrun.web.user.dto;
 
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,6 +26,8 @@ public class UserInfoResponse {
 	private Role role;
 	private String phoneNumber;
 	private String email;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
 
 	public static UserInfoResponse from(User user) {
 		return UserInfoResponse.builder()
@@ -33,6 +36,8 @@ public class UserInfoResponse {
 			.role(user.getRole())
 			.phoneNumber(user.getPhoneNumber())
 			.email(user.getEmail())
+			.createdAt(user.getCreatedAt())
+			.modifiedAt(user.getModifiedAt())
 			.build();
 	}
 }
