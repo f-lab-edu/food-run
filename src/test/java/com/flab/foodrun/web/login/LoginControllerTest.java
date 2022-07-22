@@ -69,7 +69,7 @@ class LoginControllerTest {
 	@DisplayName("로그인 테스트 : 성공")
 	void loginSuccessTest() throws Exception {
 		//given
-		userService.addUser(userSaveRequest.toEntity());
+		userService.addUser(userSaveRequest);
 		LoginRequest loginForm = new LoginRequest(userSaveRequest.getLoginId(),
 			userSaveRequest.getPassword());
 		//when
@@ -89,7 +89,7 @@ class LoginControllerTest {
 	@DisplayName("POST: 아이디를 못찾을 때")
 	void postNotFoundId() throws Exception {
 		//given
-		User user = userService.addUser(userSaveRequest.toEntity());
+		User user = userService.addUser(userSaveRequest);
 		LoginRequest loginForm = new LoginRequest("invalid,", "invalid");
 		//when
 		mockMvc.perform(post("/login")
@@ -106,7 +106,7 @@ class LoginControllerTest {
 	@DisplayName("POST: 비밀번호를 못찾을 때")
 	void postNotFoundPassword() throws Exception {
 		//given
-		User user = userService.addUser(userSaveRequest.toEntity());
+		User user = userService.addUser(userSaveRequest);
 		LoginRequest loginForm = new LoginRequest(user.getLoginId(), "invalid");
 		//when
 		mockMvc.perform(post("/login")

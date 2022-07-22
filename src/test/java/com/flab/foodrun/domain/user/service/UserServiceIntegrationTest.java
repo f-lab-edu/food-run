@@ -40,7 +40,7 @@ class UserServiceIntegrationTest {
 	@DisplayName("유저 회원 정보 수정 테스트")
 	void modifyUser() {
 		//given
-		userService.addUser(request.toEntity());
+		userService.addUser(request);
 
 		UserModifyRequest modifyRequest = UserModifyRequest.builder()
 			.loginId(request.getLoginId())
@@ -49,7 +49,7 @@ class UserServiceIntegrationTest {
 			.build();
 
 		//when
-		User user = userService.modifyUser(modifyRequest.toEntity());
+		User user = userService.modifyUser(modifyRequest);
 
 		//then
 		assertThat(user.getName()).isEqualTo(modifyRequest.getName());

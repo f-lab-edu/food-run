@@ -49,7 +49,7 @@ class LoginServiceTest {
 	@DisplayName("입력된 비밀번호를 바탕으로 로그인 정보를 가져오는지 확인")
 	void login() {
 		//given
-		userService.addUser(testUser.toEntity());
+		userService.addUser(testUser);
 
 		//when
 		User loginUser = loginService.login(testUser.getLoginId(), testUser.getPassword());
@@ -68,7 +68,7 @@ class LoginServiceTest {
 	@DisplayName("아이디 못 찾을 때 예외 호출되는지 확인")
 	void notFoundLoginId() {
 		//given
-		userService.addUser(testUser.toEntity());
+		userService.addUser(testUser);
 		String loginId = "Invalid-LoginId";
 		//when
 		assertThatThrownBy(() -> {
@@ -81,7 +81,7 @@ class LoginServiceTest {
 	@DisplayName("비밀번호 틀릴 때 예외 호출되는지 확인")
 	void invalidPassword() {
 		//given
-		userService.addUser(testUser.toEntity());
+		userService.addUser(testUser);
 		String loginId = testUser.getLoginId();
 		String password = "wrong-password";
 		//when
