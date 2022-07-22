@@ -5,6 +5,7 @@ import com.flab.foodrun.domain.login.exception.LoginIdNotFoundException;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.dao.UserMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
  * @RequiredArgsConstructor: 필수 인자가 있는 생성자 생성. 요구되는 인자는 @NonNull 같은 제약 조건이 있는 final 필드나 일반 필드.
  */
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoginService {
@@ -24,6 +26,7 @@ public class LoginService {
 		User user = userMapper.selectUserByLoginId(loginId)
 			.orElseThrow(LoginIdNotFoundException::new);
 
+		log.info("inputPassword:{}, userPassword:{}", inputPassword, user.getPassword());
 		if (isCheckedPassword(inputPassword, user.getPassword())) {
 			return user;
 		} else {

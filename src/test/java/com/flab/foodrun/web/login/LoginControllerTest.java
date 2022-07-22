@@ -70,8 +70,9 @@ class LoginControllerTest {
 	void loginSuccessTest() throws Exception {
 		//given
 		userService.addUser(userSaveRequest);
+		userService.findUser(userSaveRequest.getLoginId());
 		LoginRequest loginForm = new LoginRequest(userSaveRequest.getLoginId(),
-			userSaveRequest.getPassword());
+			"testPassword");
 		//when
 		User loginUser = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
 		mockMvc.perform(post("/login")

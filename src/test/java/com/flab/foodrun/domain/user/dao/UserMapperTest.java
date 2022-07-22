@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,13 +29,13 @@ class UserMapperTest {
 		user1 = User.builder()
 			.loginId("test").password("testPassword").name("testName").role(Role.CLIENT)
 			.status(UserStatus.ACTIVE).phoneNumber("01012345678").email("test@gmail.com")
-			.createdBy("testCreatedBy")
+			.createdBy("testCreatedBy").createdAt(LocalDateTime.now())
 			.build();
 
 		user2 = User.builder()
 			.loginId("test2").password("testPassword2").name("testName2").role(Role.CLIENT)
 			.status(UserStatus.ACTIVE).phoneNumber("01012345671").email("test2@gmail.com")
-			.createdBy("test2CreatedBy")
+			.createdBy("test2CreatedBy").createdAt(LocalDateTime.now())
 			.build();
 	}
 
