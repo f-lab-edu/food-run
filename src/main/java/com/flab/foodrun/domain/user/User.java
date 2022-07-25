@@ -36,11 +36,11 @@ public class User {
 	private String createdBy;
 	private String modifiedBy;
 
-	public void setUser(String name, String email, String phoneNumber) {
+	public void modifyUser(String name, String email, String phoneNumber) {
 		this.name = name;
 		this.email = email;
 		this.phoneNumber = phoneNumber;
 		this.modifiedAt = LocalDateTime.now();
-		this.modifiedBy = name;
+		this.modifiedBy = loginId;
 	}
 }
