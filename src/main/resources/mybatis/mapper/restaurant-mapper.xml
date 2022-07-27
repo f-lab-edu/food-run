@@ -9,3 +9,4 @@
   <resultMap id="restaurantMap" type="com.flab.foodrun.domain.restaurant.Restaurant">
     <result column="login_id" property="ownerId" jdbcType="VARCHAR" javaType="String"/>
   </resultMap>
+
