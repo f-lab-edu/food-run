@@ -15,7 +15,15 @@ public class UserModifyRequest {
 	@NotNull
 	private String loginId;
 
+	@NotNull
 	private String name;
+
+	@NotNull
 	private String phoneNumber;
+
+	@NotNull
 	private String email;
+
+	@NotNull
+	private String modifiedAt;
 }
