@@ -2,6 +2,8 @@ package com.flab.foodrun.web.user;
 
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.service.UserService;
+import com.flab.foodrun.web.user.dto.UserInfoResponse;
+import com.flab.foodrun.web.user.dto.UserModifyRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import com.flab.foodrun.web.user.dto.UserSaveResponse;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,13 +34,22 @@ public class UserController {
 	public ResponseEntity<UserSaveResponse> addUser(
 		@Validated @RequestBody UserSaveRequest userSaveRequest) {
 
-		User newUser = userService.addUser(userSaveRequest.toEntity());
+		User newUser = userService.addUser(userSaveRequest);
 		return new ResponseEntity<>(UserSaveResponse.from(newUser),
 			HttpStatus.CREATED);
 	}
 
+	@GetMapping("/{loginId}")
+	public ResponseEntity<UserInfoResponse> getUser(@PathVariable String loginId) {
+		User user = userService.findUser(loginId);
+		return new ResponseEntity<>(UserInfoResponse.from(user), HttpStatus.OK);
+	}
+
 	@PatchMapping
-	public void modifyUser(@RequestBody UserSaveRequest userSaveRequest) {
-		//TODO
+	public ResponseEntity<UserInfoResponse> modifyUser(
+		@RequestBody UserModifyRequest userModifyRequest) {
+
+		User user = userService.modifyUser(userModifyRequest);
+		return new ResponseEntity<>(UserInfoResponse.from(user), HttpStatus.OK);
 	}
 }

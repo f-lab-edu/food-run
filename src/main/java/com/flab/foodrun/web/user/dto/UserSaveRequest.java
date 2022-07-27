@@ -3,6 +3,7 @@ package com.flab.foodrun.web.user.dto;
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
+import java.time.LocalDateTime;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -45,6 +46,10 @@ public class UserSaveRequest {
 	@NotBlank(message = "{detailAddress.notBlank}")
 	private String detailAddress;
 
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public User toEntity() {
 		return User.builder()
 			.loginId(this.getLoginId())
@@ -56,6 +61,7 @@ public class UserSaveRequest {
 			.email(this.getEmail())
 			.streetAddress(this.getStreetAddress())
 			.detailAddress(this.getDetailAddress())
+			.createdAt(LocalDateTime.now())
 			.createdBy(this.getName())
 			.build();
 	}
