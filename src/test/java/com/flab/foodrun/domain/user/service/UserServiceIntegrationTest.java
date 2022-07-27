@@ -46,6 +46,7 @@ class UserServiceIntegrationTest {
 			.loginId(request.getLoginId())
 			.name("modify-name")
 			.phoneNumber("010-9999-2323")
+			.modifiedAt("test-modified")
 			.build();
 
 		//when

@@ -45,8 +45,8 @@ public class UserService {
 
 	public User modifyUser(UserModifyRequest userModifyRequest) {
 		User user = findUser(userModifyRequest.getLoginId());
-		user.modifyUser(userModifyRequest.getName(), userModifyRequest.getEmail(),
-			userModifyRequest.getPhoneNumber());
+		user.modify(userModifyRequest.getName(), userModifyRequest.getEmail(),
+			userModifyRequest.getPhoneNumber(), user.getModifiedBy());
 
 		userMapper.updateUser(user);
 		return user;
