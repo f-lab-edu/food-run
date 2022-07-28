@@ -32,7 +32,8 @@ class NaverMapApiTest {
 
 		//then
 		MapAddress mapAddress = Objects.requireNonNull(address.getBody()).getAddresses().get(0);
-		System.out.println("mapAddress = " + mapAddress.getX());
+		System.out.println("위도 = " + mapAddress.getX());
+		System.out.println("경도 = " + mapAddress.getY());
 		System.out.println("mapAddress.getRoadAddress() = " + mapAddress.getRoadAddress());
 	}
 }
