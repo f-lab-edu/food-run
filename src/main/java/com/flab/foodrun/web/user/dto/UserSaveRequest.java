@@ -2,6 +2,7 @@ package com.flab.foodrun.web.user.dto;
 
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
+import com.flab.foodrun.domain.user.UserAddress;
 import com.flab.foodrun.domain.user.UserStatus;
 import java.time.LocalDateTime;
 import javax.validation.constraints.Email;
@@ -40,11 +41,13 @@ public class UserSaveRequest {
 	@NotBlank(message = "{email.notBlank}")
 	private String email;
 
-	@NotBlank(message = "{streetAddress.notBlank}")
+	@NotNull(message = "{streetAddress.notNull}")
 	private String streetAddress;
 
-	@NotBlank(message = "{detailAddress.notBlank}")
+	@NotNull(message = "{detailAddress.notNull}")
 	private String detailAddress;
+
+	private UserAddress userAddress;
 
 	public void setPassword(String password) {
 		this.password = password;
@@ -52,17 +55,22 @@ public class UserSaveRequest {
 
 	public User toEntity() {
 		return User.builder()
-			.loginId(this.getLoginId())
-			.password(this.getPassword())
-			.name(this.getName())
-			.role(this.getRole())
-			.status(this.getStatus())
-			.phoneNumber(this.getPhoneNumber())
-			.email(this.getEmail())
-			.streetAddress(this.getStreetAddress())
-			.detailAddress(this.getDetailAddress())
+			.loginId(loginId)
+			.password(password)
+			.name(name)
+			.role(role)
+			.status(status)
+			.phoneNumber(phoneNumber)
+			.email(email)
 			.createdAt(LocalDateTime.now())
-			.createdBy(this.getName())
+			.createdBy(loginId)
+			.userAddress(UserAddress.builder()
+				.loginId(loginId)
+				.streetAddress(streetAddress)
+				.detailAddress(detailAddress)
+				.createdBy(loginId)
+				.createdAt(LocalDateTime.now())
+				.build())
 			.build();
 	}
 }
