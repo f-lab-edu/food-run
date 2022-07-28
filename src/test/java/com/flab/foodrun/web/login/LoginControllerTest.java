@@ -61,8 +61,7 @@ class LoginControllerTest {
 			.status(UserStatus.ACTIVE)
 			.phoneNumber("01012345678")
 			.email("test@gmail.com")
-			.streetAddress("testStreetAddress")
-			.detailAddress("testDetailAddress").build();
+			.build();
 	}
 
 	@Test

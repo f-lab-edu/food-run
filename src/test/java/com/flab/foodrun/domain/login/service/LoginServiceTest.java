@@ -40,8 +40,6 @@ class LoginServiceTest {
 			.status(UserStatus.ACTIVE)
 			.phoneNumber("01044667799")
 			.email("testEmail@gmail.com")
-			.streetAddress("seoul")
-			.detailAddress("377-10")
 			.build();
 	}
 

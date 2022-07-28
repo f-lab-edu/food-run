@@ -49,16 +49,11 @@ class UserControllerTest {
 
 	@BeforeEach
 	void initFormData() {
-		userSaveRequest = UserSaveRequest.builder()
-			.loginId("userControllerTestId")
-			.password("testPassword")
-			.name("testName")
-			.role(Role.CLIENT)
-			.status(UserStatus.ACTIVE)
-			.phoneNumber("01012345678")
-			.email("test@gmail.com")
-			.streetAddress("testStreetAddress")
-			.detailAddress("testDetailAddress").build();
+		userSaveRequest = UserSaveRequest.builder().loginId("userControllerTestId")
+			.password("testPassword").name("testName").role(Role.CLIENT).status(UserStatus.ACTIVE)
+			.phoneNumber("01012345678").email("test@gmail.com")
+			.streetAddress("분당구 불정로 6").detailAddress("230")
+			.build();
 	}
 
 	@Test
@@ -66,12 +61,10 @@ class UserControllerTest {
 	void modifyUserAccessTest() throws Exception {
 		//given
 		//when
-		mvc.perform(patch("/users")
-				.contentType(MediaType.APPLICATION_JSON)
+		mvc.perform(patch("/users").contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 			//then
-			.andDo(print())
-			.andExpect(status().isBadRequest());
+			.andDo(print()).andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -84,8 +77,7 @@ class UserControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 			//then
-			.andDo(print())
-			.andExpect(status().isCreated())
+			.andDo(print()).andExpect(status().isCreated())
 			.andExpect(jsonPath("$.loginId").value(userSaveRequest.getLoginId()))
 			.andExpect(jsonPath("$.name").value(userSaveRequest.getName()))
 			.andExpect(jsonPath("$.phoneNumber").value(userSaveRequest.getPhoneNumber()))
@@ -96,8 +88,7 @@ class UserControllerTest {
 	@DisplayName("회원가입 필수 항목 누락일 때 400 상태코드 리턴")
 	void addUserFail() throws Exception {
 		//given
-		UserSaveRequest userSaveRequest = UserSaveRequest.builder()
-			.loginId("testLoginIdFail")
+		UserSaveRequest userSaveRequest = UserSaveRequest.builder().loginId("testLoginIdFail")
 			.password("testPassword").build();
 
 		//when
@@ -106,8 +97,7 @@ class UserControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 			//then
-			.andDo(print())
-			.andExpect(status().isBadRequest())
+			.andDo(print()).andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.code").value("FieldErrorException"));
 	}
 
@@ -123,8 +113,7 @@ class UserControllerTest {
 				.accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isBadRequest())
 			.andExpect(jsonPath("$.code").value("DuplicatedUserIdException"))
-			.andExpect(jsonPath("$.message").value(DUPLICATED_USER_ID_EX_MESSAGE))
-			.andDo(print());
+			.andExpect(jsonPath("$.message").value(DUPLICATED_USER_ID_EX_MESSAGE)).andDo(print());
 	}
 
 	@Test
@@ -136,16 +125,14 @@ class UserControllerTest {
 		session.setAttribute(SessionConst.LOGIN_SESSION, userSaveRequest.getLoginId());
 
 		//when
-		mvc.perform(get("/users/" + userSaveRequest.getLoginId())
-				.session(session))
+		mvc.perform(get("/users/" + userSaveRequest.getLoginId()).session(session))
 
 			//then
 			.andExpect(jsonPath("$.loginId").value(userSaveRequest.getLoginId()))
 			.andExpect(jsonPath("$.name").value(userSaveRequest.getName()))
 			.andExpect(jsonPath("$.role").value(String.valueOf(userSaveRequest.getRole())))
 			.andExpect(jsonPath("$.phoneNumber").value(userSaveRequest.getPhoneNumber()))
-			.andExpect(jsonPath("$.email").value(userSaveRequest.getEmail()))
-			.andDo(print());
+			.andExpect(jsonPath("$.email").value(userSaveRequest.getEmail())).andDo(print());
 	}
 
 	@Test
@@ -159,24 +146,17 @@ class UserControllerTest {
 			.accept(MediaType.APPLICATION_JSON));
 
 		UserModifyRequest modifyRequest = UserModifyRequest.builder()
-			.loginId(userSaveRequest.getLoginId())
-			.name("test-modify-name")
-			.email("modify@gmail.com")
-			.phoneNumber("010-2222-2222")
-			.build();
+			.loginId(userSaveRequest.getLoginId()).name("test-modify-name")
+			.email("modify@gmail.com").phoneNumber("010-2222-2222").build();
 
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute(SessionConst.LOGIN_SESSION, userSaveRequest.getLoginId());
 
 		//when
-		mvc.perform(patch("/users")
-				.session(session)
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.content(mapper.writeValueAsString(modifyRequest)))
+		mvc.perform(patch("/users").session(session).contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(modifyRequest)))
 			//then
-			.andDo(print())
-			.andExpect(jsonPath("$.loginId").value(userSaveRequest.getLoginId()))
+			.andDo(print()).andExpect(jsonPath("$.loginId").value(userSaveRequest.getLoginId()))
 			.andExpect(jsonPath("$.phoneNumber").value(modifyRequest.getPhoneNumber()))
 			.andExpect(jsonPath("$.email").value(modifyRequest.getEmail()))
 			.andExpect(jsonPath("$.name").value(modifyRequest.getName()));

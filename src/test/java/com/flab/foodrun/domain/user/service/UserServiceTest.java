@@ -57,12 +57,12 @@ class UserServiceTest {
 			UserSaveRequest.builder().loginId("testId1").password("test-password").name("testName")
 				.role(Role.CLIENT).status(UserStatus.ACTIVE)
 				.phoneNumber("01012345779").email("test1@gmail.com")
-				.streetAddress("testStreetAddress1").detailAddress("testDetailAddress").build(),
+				.build(),
 
 			UserSaveRequest.builder().loginId("testId2").password("test-password").name("testName")
 				.role(Role.CLIENT).status(UserStatus.ACTIVE)
 				.phoneNumber("01012345779").email("test1@gmail.com")
-				.streetAddress("testStreetAddress1").detailAddress("testDetailAddress").build());
+				.build());
 	}
 
 	@Test
@@ -80,6 +80,7 @@ class UserServiceTest {
 		verify(mockUserMapper, times(2)).insertUser(any(User.class));
 		assertThat(findUser1.getLoginId()).isEqualTo(formList.get(0).getLoginId());
 		assertThat(findUser2.getLoginId()).isEqualTo(formList.get(1).getLoginId());
+		assertThat(findUser1.getUserAddress().getLoginId()).isEqualTo(formList.get(0).getLoginId());
 	}
 
 	@Test
