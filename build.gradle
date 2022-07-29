@@ -25,6 +25,7 @@ jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     "com/flab/foodrun/**Application.class",
+                    "com/flab/foodrun/domain/user/exception/**"
             ])
         }))
     }
@@ -52,6 +53,7 @@ jacocoTestCoverageVerification {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                     "com/flab/foodrun/**Application.class",
+                    "com/flab/foodrun/domain/user/exception/**"
             ])
         }))
     }
