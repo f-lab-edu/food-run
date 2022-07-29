@@ -4,6 +4,7 @@ import com.flab.foodrun.domain.login.exception.InvalidPasswordException;
 import com.flab.foodrun.domain.login.exception.LoginIdNotFoundException;
 import com.flab.foodrun.domain.login.exception.UnauthenticatedUserAccessException;
 import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
+import com.flab.foodrun.domain.user.exception.NotFoundAddressException;
 import com.flab.foodrun.web.exceptionhandler.ErrorResult;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,7 @@ public class WebExceptionControllerAdvice {
 	public static final String LOGIN_ID_NOT_FOUND_EX_MESSAGE = "아이디를 찾을 수 없습니다.";
 	public static final String INVALID_PASSWORD_EX_MESSAGE = "비밀번호가 일치하지 않습니다.";
 	public static final String UNAUTHENTICATED_USER_EX_MESSAGE = "허가되지 않은 사용자입니다.";
+	public static final String NOT_FOUND_ADDRESS_EX_MESSAGE = "해당 주소를 찾을 수 없습니다.";
 
 	@ExceptionHandler // Controller 계층에서 발생하는 에러를 잡아주는 기능을 가진 애노테이션
 	public ResponseEntity<ErrorResult> bindFieldErrorExceptionHandler(BindException e) {
@@ -41,7 +43,7 @@ public class WebExceptionControllerAdvice {
 	}
 
 	@ExceptionHandler
-	public ResponseEntity<ErrorResult> loginIdNotFoundException(LoginIdNotFoundException e){
+	public ResponseEntity<ErrorResult> loginIdNotFoundException(LoginIdNotFoundException e) {
 		ErrorResult errorResult = new ErrorResult("LoginIdNotFoundException",
 			LOGIN_ID_NOT_FOUND_EX_MESSAGE);
 		return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
@@ -60,6 +62,13 @@ public class WebExceptionControllerAdvice {
 
 		ErrorResult errorResult = new ErrorResult("UnauthenticatedUserAccessException",
 			UNAUTHENTICATED_USER_EX_MESSAGE);
+		return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler
+	public ResponseEntity<ErrorResult> notFoundAddressException(NotFoundAddressException e) {
+		ErrorResult errorResult = new ErrorResult("NotFoundAddressException",
+			NOT_FOUND_ADDRESS_EX_MESSAGE);
 		return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
 	}
 }
