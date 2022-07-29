@@ -6,20 +6,14 @@ import java.util.Objects;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 class NaverMapApiTest {
 
 	@Autowired
 	NaverMapApi naverMapApi;
-
-	@Autowired
-	MockMvc mockMvc;
 
 	@Test
 	@DisplayName("네이버 맵 테스트")
@@ -35,5 +29,6 @@ class NaverMapApiTest {
 		System.out.println("위도 = " + mapAddress.getX());
 		System.out.println("경도 = " + mapAddress.getY());
 		System.out.println("mapAddress.getRoadAddress() = " + mapAddress.getRoadAddress());
+		System.out.println("mapAddress = " + address.getBody().getMeta().getTotalCount());
 	}
 }

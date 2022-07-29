@@ -2,7 +2,6 @@ package com.flab.foodrun.web.api;
 
 import com.flab.foodrun.web.user.dto.naver.NaverMapApiResponse;
 import java.net.URI;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-@Slf4j
 @Service
 public class NaverMapApi {
 
@@ -40,8 +38,6 @@ public class NaverMapApi {
 			.build()
 			.toUri();
 
-		log.info(url.toString());
-
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 		httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
@@ -49,7 +45,7 @@ public class NaverMapApi {
 		httpHeaders.set("X-NCP-APIGW-API-KEY", naverSecretKey);
 
 		HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
-
+		
 		return restTemplate.exchange(url, HttpMethod.GET, httpEntity, NaverMapApiResponse.class);
 	}
 }
