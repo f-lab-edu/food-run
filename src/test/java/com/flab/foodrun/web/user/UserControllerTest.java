@@ -1,6 +1,7 @@
 package com.flab.foodrun.web.user;
 
 import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.DUPLICATED_USER_ID_EX_MESSAGE;
+import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.NOT_FOUND_ADDRESS_EX_MESSAGE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -14,8 +15,10 @@ import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.service.UserService;
 import com.flab.foodrun.web.SessionConst;
 import com.flab.foodrun.web.user.dto.UserAddressSaveRequest;
+import com.flab.foodrun.web.user.dto.UserAddressSaveResponse;
 import com.flab.foodrun.web.user.dto.UserModifyRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
+import java.math.BigDecimal;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,7 +164,7 @@ class UserControllerTest {
 		//given
 		UserSaveRequest userSaveRequest = createUserInfo();
 		User user = userService.addUser(userSaveRequest);
-		UserAddressSaveRequest userAddressSaveRequest = createUserAddressInfo();
+		UserAddressSaveRequest userAddressSaveRequest = createUserAddressInfo("분당구 불정로 6");
 
 		//when
 		mvc.perform(post("/users/" + user.getId() + "/addresses")
@@ -169,13 +172,38 @@ class UserControllerTest {
 				.accept(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(userAddressSaveRequest)))
 			//then
-			.andDo(print());
+			.andDo(print())
+			.andExpect(status().isCreated())
+			.andExpect(
+				jsonPath("$.streetAddress").value(getMockAddressResponse().getStreetAddress()))
+			.andExpect(jsonPath("$.detailAddress").value("507호"))
+			.andExpect(jsonPath("$.latitude").value(getMockAddressResponse().getLatitude()))
+			.andExpect(jsonPath("$.longitude").value(getMockAddressResponse().getLongitude()));
 	}
 
-	private UserAddressSaveRequest createUserAddressInfo() {
+	@Test
+	@DisplayName("유저 주소 정보 추가 실패")
+	void addUserAddressExceptionTest() throws Exception {
+		//given
+		UserSaveRequest userSaveRequest = createUserInfo();
+		User user = userService.addUser(userSaveRequest);
+		UserAddressSaveRequest userAddressSaveRequest = createUserAddressInfo("우주의 끝");
+
+		//when
+		mvc.perform(post("/users/" + user.getId() + "/addresses")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(mapper.writeValueAsString(userAddressSaveRequest)))
+			//then
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.code").value("NotFoundAddressException"))
+			.andExpect(jsonPath("$.message").value(NOT_FOUND_ADDRESS_EX_MESSAGE));
+	}
+
+	private UserAddressSaveRequest createUserAddressInfo(String streetAddress) {
 		return UserAddressSaveRequest
 			.builder()
-			.streetAddress("분당구 불정로 6")
+			.streetAddress(streetAddress)
 			.detailAddress("507호")
 			.build();
 	}
@@ -184,6 +212,14 @@ class UserControllerTest {
 		return UserSaveRequest.builder().loginId("userControllerTestId")
 			.password("testPassword").name("testName").role(Role.CLIENT)
 			.phoneNumber("01012345678").email("test@gmail.com")
+			.build();
+	}
+
+	private UserAddressSaveResponse getMockAddressResponse() {
+		return UserAddressSaveResponse.builder()
+			.streetAddress("경기도 성남시 분당구 불정로 6 NAVER그린팩토리")
+			.latitude(BigDecimal.valueOf(127.1054065))
+			.longitude(BigDecimal.valueOf(37.3595669))
 			.build();
 	}
 }
