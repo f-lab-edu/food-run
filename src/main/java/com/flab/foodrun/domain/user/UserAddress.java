@@ -23,4 +23,15 @@ public class UserAddress {
 	private String createdBy;
 	private LocalDateTime modifiedAt;
 	private String modifiedBy;
+
+	public void createUserAddress(String loginId, String streetAddress, String detailAddress,
+		BigDecimal latitude, BigDecimal longitude) {
+		this.loginId = loginId;
+		this.streetAddress = streetAddress;
+		this.detailAddress = detailAddress;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.createdBy = loginId;
+		this.createdAt = LocalDateTime.now();
+	}
 }
