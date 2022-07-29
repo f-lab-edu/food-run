@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
-import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.web.user.dto.UserModifyRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +29,6 @@ class UserServiceIntegrationTest {
 			.password("test-password")
 			.name("testName")
 			.role(Role.CLIENT)
-			.status(UserStatus.ACTIVE)
 			.phoneNumber("01012345779")
 			.email("test1@gmail.com")
 			.build();

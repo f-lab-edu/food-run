@@ -37,7 +37,6 @@ class LoginServiceTest {
 			.password("testLoginPassword")
 			.name("testName")
 			.role(Role.CLIENT)
-			.status(UserStatus.ACTIVE)
 			.phoneNumber("01044667799")
 			.email("testEmail@gmail.com")
 			.build();
