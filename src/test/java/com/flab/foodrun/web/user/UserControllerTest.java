@@ -10,12 +10,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.foodrun.domain.user.Role;
-import com.flab.foodrun.domain.user.UserStatus;
+import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.service.UserService;
 import com.flab.foodrun.web.SessionConst;
+import com.flab.foodrun.web.user.dto.UserAddressSaveRequest;
 import com.flab.foodrun.web.user.dto.UserModifyRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +45,6 @@ class UserControllerTest {
 	UserService userService;
 
 	ObjectMapper mapper = new ObjectMapper();
-	UserSaveRequest userSaveRequest;
-
-	@BeforeEach
-	void initFormData() {
-		userSaveRequest = UserSaveRequest.builder().loginId("userControllerTestId")
-			.password("testPassword").name("testName").role(Role.CLIENT).status(UserStatus.ACTIVE)
-			.phoneNumber("01012345678").email("test@gmail.com")
-			.streetAddress("분당구 불정로 6").detailAddress("230")
-			.build();
-	}
 
 	@Test
 	@DisplayName("PATCH /users 이동할 때 인증 안 되어 있으면 거부")
@@ -71,6 +61,7 @@ class UserControllerTest {
 	@DisplayName("회원가입 성공 시 201 상태코드 리턴")
 	void addUserSuccess() throws Exception {
 		//given
+		UserSaveRequest userSaveRequest = createUserInfo();
 		//when
 		mvc.perform(post("/users")
 				.content(mapper.writeValueAsString(userSaveRequest))
@@ -105,6 +96,7 @@ class UserControllerTest {
 	@DisplayName("중복아이디 입력 시 런타임 예외 출력")
 	void duplicatedUserIdPost() throws Exception {
 		//given
+		UserSaveRequest userSaveRequest = createUserInfo();
 		userService.addUser(userSaveRequest);
 		//when
 		mvc.perform(post("/users")
@@ -120,6 +112,7 @@ class UserControllerTest {
 	@DisplayName("회원 아이디로 회원 정보 찾기")
 	void findUserId() throws Exception {
 		//given
+		UserSaveRequest userSaveRequest = createUserInfo();
 		userService.addUser(userSaveRequest);
 		MockHttpSession session = new MockHttpSession();
 		session.setAttribute(SessionConst.LOGIN_SESSION, userSaveRequest.getLoginId());
@@ -139,7 +132,7 @@ class UserControllerTest {
 	@DisplayName("회원 정보 수정")
 	void modifyUser() throws Exception {
 		//given
-
+		UserSaveRequest userSaveRequest = createUserInfo();
 		mvc.perform(post("/users")
 			.content(mapper.writeValueAsString(userSaveRequest))
 			.contentType(MediaType.APPLICATION_JSON)
@@ -160,5 +153,37 @@ class UserControllerTest {
 			.andExpect(jsonPath("$.phoneNumber").value(modifyRequest.getPhoneNumber()))
 			.andExpect(jsonPath("$.email").value(modifyRequest.getEmail()))
 			.andExpect(jsonPath("$.name").value(modifyRequest.getName()));
+	}
+
+	@Test
+	@DisplayName("유저 주소 정보 추가: POST /users/{id}/addresses")
+	void addUserAddress() throws Exception {
+		//given
+		UserSaveRequest userSaveRequest = createUserInfo();
+		User user = userService.addUser(userSaveRequest);
+		UserAddressSaveRequest userAddressSaveRequest = createUserAddressInfo();
+
+		//when
+		mvc.perform(post("/users/" + user.getId() + "/addresses")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.content(mapper.writeValueAsString(userAddressSaveRequest)))
+			//then
+			.andDo(print());
+	}
+
+	private UserAddressSaveRequest createUserAddressInfo() {
+		return UserAddressSaveRequest
+			.builder()
+			.streetAddress("분당구 불정로 6")
+			.detailAddress("507호")
+			.build();
+	}
+
+	private UserSaveRequest createUserInfo() {
+		return UserSaveRequest.builder().loginId("userControllerTestId")
+			.password("testPassword").name("testName").role(Role.CLIENT)
+			.phoneNumber("01012345678").email("test@gmail.com")
+			.build();
 	}
 }
