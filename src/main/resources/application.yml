@@ -20,9 +20,14 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db?characterEncoding=utf8
-    username: mysql_dba
-    password: foodrun2*
+    url: ${DATASOURCE.URL}
+    username: ${DATASOURCE.USERNAME}
+    password: ${DATASOURCE.PASSWORD}
+
+  # 항상 SQL 데이터베이스를 초기화
+  sql:
+    init:
+      mode: always
 
   # message properties 불러오기 설정
 
@@ -36,10 +41,11 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
+
 # Naver Map API
 
 naver:
   client:
-    id: btbjp58exr
-    secret: VRpO1xHLUZmUdxZOXxjgATCovPj7hAxe2WvSgazm
-    url: https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode
+    id: ${NAVER.ID}
+    secret: ${NAVER.SECRET}
+    url: ${NAVER.URL}
