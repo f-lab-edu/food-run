@@ -2,7 +2,6 @@ package com.flab.foodrun.web.api;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.serverError;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,6 +14,7 @@ import com.flab.foodrun.web.user.dto.naver.NaverMapApiResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker.State;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
+import io.vavr.collection.Stream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +35,12 @@ import org.springframework.test.context.ActiveProfiles;
  */
 
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureWireMock(port = 0)
 class NaverMapApiTest {
 
+	public static final String NAVER_API = "naverMapCircuitBreaker";
 	private static final String ADDRESS_NAME = "분당구 불정로 6";
-
 	@Autowired
 	CircuitBreakerRegistry circuitBreakerRegistry;
 
@@ -50,19 +50,12 @@ class NaverMapApiTest {
 	@Autowired
 	ObjectMapper objectMapper;
 
-
 	@Test
 	@DisplayName("네이버 API 성공 - 간단한 주소 입력시 도로명 주소, 좌표 값 반환")
 	void naverMapTest() throws JsonProcessingException {
 		//given
-		List<MapAddress> addresses = setInitMapAddress();
-		NaverMapApiResponse mockResponse = createMockSuccessResponse(addresses);
-
-		stubFor(get(urlPathEqualTo("/map-geocode/v2/geocode"))
-			.willReturn(aResponse()
-				.withStatus(200)
-				.withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-				.withBody(objectMapper.writeValueAsString(mockResponse))));
+		transitionToClosedState(NAVER_API);
+		produceSuccess();
 
 		//when
 		ResponseEntity<NaverMapApiResponse> response = naverMapApi.getCoordinateByAddress(
@@ -77,34 +70,72 @@ class NaverMapApiTest {
 	}
 
 	@Test
-	@DisplayName("Circuit Breaker OPEN, CLOSED 상태 전환 테스트")
-	void openClosedTest() throws JsonProcessingException {
+	@DisplayName("OPEN 상태에서 서비스 접속 성공 임계점 넘었을 때 HALF_OPEN 에서 CLOSED로 변경되는지 확인")
+	void shouldCloseServiceCircuitBreaker() throws JsonProcessingException {
 		//given
+		transitionToOpenState(NAVER_API);
+		circuitBreakerRegistry.circuitBreaker(NAVER_API).transitionToHalfOpenState();
+
+		produceSuccess();
+
+		//when
+		Stream.rangeClosed(1, 5).forEach((count) -> naverMapApi.getCoordinateByAddress(""));
+
+		//then
+		checkHealthStatus(NAVER_API, State.CLOSED);
+	}
+
+	@Test
+	@DisplayName("외부 API 접속 에러일 때 상태가 CLOSED -> OPEN으로 변경되는지 확인")
+	void shouldOpenServiceCircuitBreaker() {
+		//given
+		transitionToClosedState(NAVER_API);
+		produceFailure();
+
+		//when
+		Stream.rangeClosed(1, 5).forEach((count) -> naverMapApi.getCoordinateByAddress(""));
+
+		//then
+		checkHealthStatus(NAVER_API, State.OPEN);
+	}
+
+
+	private void produceSuccess() throws JsonProcessingException {
+		List<MapAddress> addresses = setInitMapAddress();
+		NaverMapApiResponse mockResponse = createMockSuccessResponse(addresses);
+
+		stubFor(get(urlPathEqualTo("/map-geocode/v2/geocode"))
+			.willReturn(aResponse()
+				.withStatus(200)
+				.withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.withBody(objectMapper.writeValueAsString(mockResponse))));
+	}
+
+	private void produceFailure() {
 		Optional<CircuitBreaker> circuitBreaker = circuitBreakerRegistry.find(
 			"naverMapCircuitBreaker");
 
-		int minimumNumberOfCalls = circuitBreaker.get().getCircuitBreakerConfig()
-			.getMinimumNumberOfCalls();
-
-		NaverMapApiResponse mockResponse = createMockFailResponse();
-
 		stubFor(get(urlPathEqualTo("/map-geocode/v2/geocode"))
-			.willReturn(serverError()));
-
-		circuitBreaker.get().reset();
-
-		//when
-		for (int i = 0; i < minimumNumberOfCalls + 5; i++) {
-			naverMapApi.getCoordinateByAddress("아무거나");
-			//then
-			if (i < minimumNumberOfCalls) {
-				assertThat(circuitBreaker.get().getState()).isEqualTo(State.CLOSED);
-			} else {
-				assertThat(circuitBreaker.get().getState()).isEqualTo(State.OPEN);
-			}
-		}
+			.willReturn(aResponse()
+				.withStatus(500)
+				.withHeader(org.springframework.http.HttpHeaders.CONTENT_TYPE,
+					MediaType.APPLICATION_JSON_VALUE)));
 	}
 
+	private void checkHealthStatus(String circuitBreakerName, CircuitBreaker.State state) {
+		CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker(circuitBreakerName);
+		assertThat(circuitBreaker.getState()).isEqualTo(state);
+	}
+
+	private void transitionToOpenState(String circuitBreakerName) {
+		CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker(circuitBreakerName);
+		circuitBreaker.transitionToOpenState();
+	}
+
+	private void transitionToClosedState(String circuitBreakerName) {
+		CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker(circuitBreakerName);
+		circuitBreaker.transitionToClosedState();
+	}
 
 	private List<MapAddress> setInitMapAddress() {
 		List<MapAddress> addresses = new ArrayList<>();
@@ -124,15 +155,6 @@ class NaverMapApiTest {
 				.count(1)
 				.page(1)
 				.build())
-			.build();
-	}
-
-	private NaverMapApiResponse createMockFailResponse() {
-		return NaverMapApiResponse.builder()
-			.meta(Meta.builder()
-				.totalCount(0)
-				.count(0)
-				.page(0).build())
 			.build();
 	}
 }

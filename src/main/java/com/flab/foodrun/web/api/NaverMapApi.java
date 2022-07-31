@@ -22,6 +22,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequiredArgsConstructor
 public class NaverMapApi {
 
+	public static final String NAVER_API = "naverMapCircuitBreaker";
 	private final RestTemplate restTemplate;
 
 	@Value("${naver.client.id}")
@@ -36,7 +37,7 @@ public class NaverMapApi {
 	@Value("${naver.client.url}")
 	private String naverUrl;
 
-	@CircuitBreaker(name = "naverMapCircuitBreaker", fallbackMethod = "fallback")
+	@CircuitBreaker(name = NAVER_API, fallbackMethod = "fallback")
 	public ResponseEntity<NaverMapApiResponse> getCoordinateByAddress(String query) {
 		URI url = UriComponentsBuilder
 			.fromHttpUrl(naverHost + naverUrl)
@@ -57,7 +58,9 @@ public class NaverMapApi {
 		return restTemplate.exchange(url, HttpMethod.GET, httpEntity, NaverMapApiResponse.class);
 	}
 
-	private ResponseEntity<NaverMapApiResponse> fallback() {
+	private ResponseEntity<NaverMapApiResponse> fallback(String query, Exception e) {
+
+		log.info("fallback exception:{}", e.getMessage());
 
 		return new ResponseEntity<>(NaverMapApiResponse.builder()
 			.meta(Meta.builder().totalCount(0).build())
