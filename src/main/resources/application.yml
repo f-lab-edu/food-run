@@ -48,4 +48,15 @@ naver:
   client:
     id: ${NAVER.ID}
     secret: ${NAVER.SECRET}
-    url: https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode
+    host: https://naveropenapi.apigw.ntruss.com
+    url: /map-geocode/v2/geocode
+
+# resilience4j
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      minimumNumberOfCalls: 10
+  instances:
+    naverMapCircuitBreaker:
+      baseConfig: default
