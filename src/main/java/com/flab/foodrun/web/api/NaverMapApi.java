@@ -1,18 +1,23 @@
 package com.flab.foodrun.web.api;
 
+import com.flab.foodrun.web.user.dto.naver.Meta;
 import com.flab.foodrun.web.user.dto.naver.NaverMapApiResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class NaverMapApi {
@@ -25,15 +30,21 @@ public class NaverMapApi {
 	@Value("${naver.client.secret}")
 	private String naverSecretKey;
 
-	@Value("${naver.client.url}")
-	private String naverMapUrl;
+	@Value("${naver.client.host}")
+	private String naverHost;
 
+	@Value("${naver.client.url}")
+	private String naverUrl;
+
+	@CircuitBreaker(name = "naverMapCircuitBreaker", fallbackMethod = "fallback")
 	public ResponseEntity<NaverMapApiResponse> getCoordinateByAddress(String query) {
 		URI url = UriComponentsBuilder
-			.fromHttpUrl(naverMapUrl)
+			.fromHttpUrl(naverHost + naverUrl)
 			.queryParam("query", query)
 			.build()
 			.toUri();
+
+		log.info("url:{}", url);
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
@@ -44,5 +55,12 @@ public class NaverMapApi {
 		HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
 
 		return restTemplate.exchange(url, HttpMethod.GET, httpEntity, NaverMapApiResponse.class);
+	}
+
+	private ResponseEntity<NaverMapApiResponse> fallback() {
+
+		return new ResponseEntity<>(NaverMapApiResponse.builder()
+			.meta(Meta.builder().totalCount(0).build())
+			.build(), HttpStatus.OK);
 	}
 }
