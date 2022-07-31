@@ -66,5 +66,5 @@ resilience4j.circuitbreaker:
       minimumNumberOfCalls: 5
       waitDurationInOpenState: 10000
   instances:
-    naverMapApiCircuitBreaker:
+    naverMapCircuitBreaker:
       baseConfig: default
