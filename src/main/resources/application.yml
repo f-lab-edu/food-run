@@ -66,5 +66,5 @@ resilience4j.circuitbreaker:
       minimumNumberOfCalls: 5
       waitDurationInOpenState: 10000
   instances:
-    kakaoAddressApiCircuitBreaker:
+    naverMapApiCircuitBreaker:
       baseConfig: default
