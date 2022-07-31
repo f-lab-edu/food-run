@@ -56,7 +56,15 @@ naver:
 resilience4j.circuitbreaker:
   configs:
     default:
-      minimumNumberOfCalls: 10
+      failureRateThreshold: 50
+      slowCallRateThreshold: 100
+      slowCallDurationThreshold: 60000
+      permittedNumberOfCallsInHalfOpenState: 4
+      maxWaitDurationInHalfOpenState: 1000
+      slidingWindowType: COUNT_BASED
+      slidingWindowSize: 10
+      minimumNumberOfCalls: 5
+      waitDurationInOpenState: 10000
   instances:
-    naverMapCircuitBreaker:
+    kakaoAddressApiCircuitBreaker:
       baseConfig: default
