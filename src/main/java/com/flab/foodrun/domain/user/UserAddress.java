@@ -24,7 +24,7 @@ public class UserAddress {
 	private LocalDateTime modifiedAt;
 	private String modifiedBy;
 
-	public void createUserAddress(String loginId, String streetAddress, String detailAddress,
+	public void writeUserAddressInfo(String loginId, String streetAddress, String detailAddress,
 		BigDecimal latitude, BigDecimal longitude) {
 		this.loginId = loginId;
 		this.streetAddress = streetAddress;

@@ -28,41 +28,6 @@
             #{createdBy})
   </insert>
 
-  <insert id="insertUserAddress" useGeneratedKeys="true" keyProperty="id"
-    parameterType="com.flab.foodrun.domain.user.UserAddress">
-    INSERT INTO user_address(id,
-                             login_id,
-                             street_address,
-                             detail_address,
-                             latitude,
-                             longitude,
-                             created_at,
-                             modified_at,
-                             created_by,
-                             modified_by)
-    VALUES (UNHEX(REPLACE(UUID(), '-', '')),
-            #{loginId},
-            #{streetAddress},
-            #{detailAddress},
-            #{latitude},
-            #{longitude},
-            #{createdAt},
-            #{modifiedAt},
-            #{createdBy},
-            #{modifiedBy})
-  </insert>
-
-  <select id="selectUserAddressByLoginId" resultType="com.flab.foodrun.domain.user.UserAddress">
-    SELECT hex(SUBSTR(id, 1, 16)) AS id,
-           login_id,
-           street_address,
-           detail_address,
-           latitude,
-           longitude
-    FROM user_address
-    WHERE login_id = #{loginId}
-  </select>
-
   <select id="countByLoginId" resultType="int">
     SELECT COUNT(*)
     FROM user

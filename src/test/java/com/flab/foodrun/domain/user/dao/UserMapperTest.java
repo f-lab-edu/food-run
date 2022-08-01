@@ -22,6 +22,9 @@ class UserMapperTest {
 	@Autowired
 	private UserMapper userMapper;
 
+	@Autowired
+	private UserAddressMapper userAddressMapper;
+
 	@Test
 	@DisplayName("User 객체 insert 쿼리 테스트")
 	void insertUser() {
@@ -119,8 +122,8 @@ class UserMapperTest {
 
 		//when
 		userMapper.insertUser(user);
-		userMapper.insertUserAddress(userAddress);
-		UserAddress address = userMapper.selectUserAddressByLoginId(user.getLoginId())
+		userAddressMapper.insertUserAddress(userAddress);
+		UserAddress address = userAddressMapper.selectUserAddressByLoginId(user.getLoginId())
 			.orElseThrow();
 
 		//then
