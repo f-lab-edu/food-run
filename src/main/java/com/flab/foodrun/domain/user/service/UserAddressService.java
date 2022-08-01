@@ -2,6 +2,7 @@ package com.flab.foodrun.domain.user.service;
 
 import com.flab.foodrun.domain.login.exception.LoginIdNotFoundException;
 import com.flab.foodrun.domain.user.UserAddress;
+import com.flab.foodrun.domain.user.dao.UserAddressMapper;
 import com.flab.foodrun.domain.user.dao.UserMapper;
 import com.flab.foodrun.domain.user.exception.NotFoundAddressException;
 import com.flab.foodrun.web.api.NaverMapApi;
@@ -22,10 +23,11 @@ public class UserAddressService {
 
 	private final UserMapper userMapper;
 	private final NaverMapApi naverMapApi;
+	private final UserAddressMapper userAddressMapper;
 
 	public UserAddress addUserAddress(Long id, UserAddressSaveRequest userAddressSaveRequest) {
 		UserAddress userAddress = createUserAddressInfo(id, userAddressSaveRequest);
-		userMapper.insertUserAddress(userAddress);
+		userAddressMapper.insertUserAddress(userAddress);
 		return userAddress;
 	}
 
@@ -49,7 +51,7 @@ public class UserAddressService {
 		String roadAddress = naverAddress.getRoadAddress();
 
 		UserAddress userAddress = new UserAddress();
-		userAddress.createUserAddress(loginId, roadAddress,
+		userAddress.writeUserAddressInfo(loginId, roadAddress,
 			userAddressSaveRequest.getDetailAddress(), spotX, spotY);
 
 		return userAddress;
