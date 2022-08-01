@@ -6,15 +6,4 @@ public class NotFoundAddressException extends RuntimeException {
 		super();
 	}
 
-	public NotFoundAddressException(String message) {
-		super(message);
-	}
-
-	public NotFoundAddressException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public NotFoundAddressException(Throwable cause) {
-		super(cause);
-	}
 }
