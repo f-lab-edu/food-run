@@ -34,8 +34,7 @@ public class UserAddressService {
 	private UserAddress createUserAddressInfo(Long id,
 		UserAddressSaveRequest userAddressSaveRequest) {
 
-		String loginId = userMapper.selectUserById(id).orElseThrow(LoginIdNotFoundException::new)
-			.getLoginId();
+		String loginId = findUserLoginId(id);
 
 		ResponseEntity<NaverMapApiResponse> address = naverMapApi.getCoordinateByAddress(
 			userAddressSaveRequest.getStreetAddress());
@@ -55,5 +54,10 @@ public class UserAddressService {
 			userAddressSaveRequest.getDetailAddress(), spotX, spotY);
 
 		return userAddress;
+	}
+
+	private String findUserLoginId(Long id) {
+		return userMapper.selectUserById(id).orElseThrow(LoginIdNotFoundException::new)
+			.getLoginId();
 	}
 }
