@@ -10,6 +10,7 @@ import com.flab.foodrun.web.user.dto.UserAddressSaveRequest;
 import com.flab.foodrun.web.user.dto.naver.MapAddress;
 import com.flab.foodrun.web.user.dto.naver.NaverMapApiResponse;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -36,14 +37,15 @@ public class UserAddressService {
 
 		String loginId = findUserLoginId(id);
 
-		ResponseEntity<NaverMapApiResponse> address = naverMapApi.getCoordinateByAddress(
+		ResponseEntity<NaverMapApiResponse> response = naverMapApi.getCoordinateByAddress(
 			userAddressSaveRequest.getStreetAddress());
+		List<MapAddress> addresses = Objects.requireNonNull(response.getBody()).getAddresses();
 
-		if (Objects.requireNonNull(address.getBody()).getAddresses().isEmpty()) {
+		if (addresses.isEmpty()) {
 			throw new NotFoundAddressException();
 		}
 
-		MapAddress naverAddress = Objects.requireNonNull(address.getBody()).getAddresses().get(0);
+		MapAddress naverAddress = addresses.get(0);
 
 		BigDecimal spotX = naverAddress.getX();
 		BigDecimal spotY = naverAddress.getY();
