@@ -23,6 +23,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class NaverMapApi {
 
 	public static final String NAVER_API = "naverMapCircuitBreaker";
+	public static final String NAVER_KEY_ID = "X-NCP-APIGW-API-KEY-ID";
+	public static final String NAVER_SECRET_KEY = "X-NCP-APIGW-API-KEY";
 	private final RestTemplate restTemplate;
 
 	@Value("${naver.client.id}")
@@ -50,8 +52,8 @@ public class NaverMapApi {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
 		httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-		httpHeaders.set("X-NCP-APIGW-API-KEY-ID", naverClientId);
-		httpHeaders.set("X-NCP-APIGW-API-KEY", naverSecretKey);
+		httpHeaders.set(NAVER_KEY_ID, naverClientId);
+		httpHeaders.set(NAVER_SECRET_KEY, naverSecretKey);
 
 		HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
 
