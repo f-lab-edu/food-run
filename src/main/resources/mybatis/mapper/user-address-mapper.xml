@@ -8,8 +8,7 @@
 
   <insert id="insertUserAddress" useGeneratedKeys="true" keyProperty="id"
     parameterType="com.flab.foodrun.domain.user.UserAddress">
-    INSERT INTO user_address(id,
-                             login_id,
+    INSERT INTO user_address(login_id,
                              street_address,
                              detail_address,
                              latitude,
@@ -18,8 +17,7 @@
                              modified_at,
                              created_by,
                              modified_by)
-    VALUES (UNHEX(REPLACE(UUID(), '-', '')),
-            #{loginId},
+    VALUES (#{loginId},
             #{streetAddress},
             #{detailAddress},
             #{latitude},
@@ -31,7 +29,7 @@
   </insert>
 
   <select id="selectUserAddressByLoginId" resultType="com.flab.foodrun.domain.user.UserAddress">
-    SELECT hex(SUBSTR(id, 1, 16)) AS id,
+    SELECT id,
            login_id,
            street_address,
            detail_address,
