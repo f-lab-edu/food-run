@@ -15,23 +15,30 @@ public class UserAddress {
 
 	private Long id;
 	private String loginId;
+
 	private String streetAddress;
 	private String detailAddress;
+
 	private BigDecimal latitude;
 	private BigDecimal longitude;
+
 	private LocalDateTime createdAt;
 	private String createdBy;
+
 	private LocalDateTime modifiedAt;
 	private String modifiedBy;
 
-	public void writeUserAddressInfo(String loginId, String streetAddress, String detailAddress,
-		BigDecimal latitude, BigDecimal longitude) {
-		this.loginId = loginId;
-		this.streetAddress = streetAddress;
-		this.detailAddress = detailAddress;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.createdBy = loginId;
-		this.createdAt = LocalDateTime.now();
+	public static UserAddress writeInitialUserAddressInfo(String loginId, String streetAddress,
+		String detailAddress, BigDecimal latitude, BigDecimal longitude) {
+
+		return UserAddress.builder()
+			.loginId(loginId)
+			.streetAddress(streetAddress)
+			.detailAddress(detailAddress)
+			.latitude(latitude)
+			.longitude(longitude)
+			.createdAt(LocalDateTime.now())
+			.createdBy(loginId)
+			.build();
 	}
 }
