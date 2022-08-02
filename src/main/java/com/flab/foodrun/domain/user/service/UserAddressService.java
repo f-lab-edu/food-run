@@ -51,11 +51,8 @@ public class UserAddressService {
 		BigDecimal spotY = naverAddress.getY();
 		String roadAddress = naverAddress.getRoadAddress();
 
-		UserAddress userAddress = new UserAddress();
-		userAddress.writeUserAddressInfo(loginId, roadAddress,
+		return UserAddress.writeInitialUserAddressInfo(loginId, roadAddress,
 			userAddressSaveRequest.getDetailAddress(), spotX, spotY);
-
-		return userAddress;
 	}
 
 	private String findUserLoginId(Long id) {
