@@ -20,8 +20,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DATASOURCE.URL}
-    username: ${DATASOURCE.USERNAME}
+    url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db?characterEncoding=utf8
+    username: mysql_dba
     password: ${DATASOURCE.PASSWORD}
 
   # 항상 SQL 데이터베이스를 초기화
@@ -46,7 +46,7 @@ mybatis:
 
 naver:
   client:
-    id: ${NAVER.ID}
+    id: btbjp58exr
     secret: ${NAVER.SECRET}
     host: https://naveropenapi.apigw.ntruss.com
     url: /map-geocode/v2/geocode
