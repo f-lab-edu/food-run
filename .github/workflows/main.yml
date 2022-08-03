@@ -30,6 +30,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Test
+        env:
+          TEST_KEY: ${{ secrets.TEST_KEY }}
+        run: |
+          echo ${#TEST_KEY}
+
       - name: Build with Gradle
         env:
           DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
