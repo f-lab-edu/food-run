@@ -13,6 +13,7 @@ public class Restaurant {
 
     private Long id;
     private String ownerId;
+    private String category;
     private String name;
     private RestaurantStatus status;
     private String description;

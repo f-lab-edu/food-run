@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 public class RestaurantService {
 
     private final RestaurantMapper restaurantMapper;
-
-
     public Restaurant addRestaurant(Restaurant restaurant) {
     }
 
