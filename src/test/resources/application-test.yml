@@ -1,0 +1,6 @@
+naver:
+  client:
+    id: btbjp58exr
+    secret: ZzBSAoHRWOaMuNzBb6m9b0eqVAh5UqzcDiIGKqam
+    host: http://localhost:${wiremock.server.port}
+    url: /map-geocode/v2/geocode
