@@ -38,6 +38,9 @@ jobs:
 
       - name: Run Tests
         run: ./gradlew test
+        env:
+          DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
+          NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
 
       - name: Generate JaCoCo Badge
         id: jacoco
