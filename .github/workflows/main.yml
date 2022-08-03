@@ -12,8 +12,6 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-permissions: write-all
-
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -31,14 +29,6 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
-      - name: Test
-        env:
-          TEST_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TEST_KEY: ${{ secrets.TEST_KEY }}
-        run: |
-          echo ${#TEST_KEY}
-          echo ${#TEST_GITHUB_TOKEN}
 
       - name: Build with Gradle
         env:
@@ -83,6 +73,3 @@ jobs:
         with:
           name: jacoco-report
           path: target/site/jacoco/
-          
-         
-         
