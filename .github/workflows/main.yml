@@ -34,6 +34,9 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
       - name: Build with Gradle
+        with:
+          DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
+          NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
         env:
           DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
           NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
@@ -41,6 +44,9 @@ jobs:
         working-directory: ${{ env.working-directory }}
 
       - name: Run Tests
+        with:
+          DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
+          NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
         env:
           DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
           NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
