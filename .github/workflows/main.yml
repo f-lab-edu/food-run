@@ -17,8 +17,6 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -31,7 +29,6 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-        working-directory: ${{ env.working-directory }}
 
       - name: Build with Gradle
         with:
@@ -41,7 +38,6 @@ jobs:
           DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
           NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
         run: ./gradlew build
-        working-directory: ${{ env.working-directory }}
 
       - name: Run Tests
         with:
@@ -51,7 +47,6 @@ jobs:
           DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
           NAVER_SECRET: ${{ secrets.NAVER_SECRET }}
         run: ./gradlew test
-        working-directory: ${{ env.working-directory }}
 
       - name: Generate JaCoCo Badge
         id: jacoco
