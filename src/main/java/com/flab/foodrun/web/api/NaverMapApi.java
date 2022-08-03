@@ -25,6 +25,7 @@ public class NaverMapApi {
 	public static final String NAVER_API = "naverMapCircuitBreaker";
 	public static final String NAVER_KEY_ID = "X-NCP-APIGW-API-KEY-ID";
 	public static final String NAVER_SECRET_KEY = "X-NCP-APIGW-API-KEY";
+
 	private final RestTemplate restTemplate;
 
 	@Value("${naver.client.id}")
