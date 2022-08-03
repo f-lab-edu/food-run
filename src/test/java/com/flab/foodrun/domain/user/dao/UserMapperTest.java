@@ -4,9 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
+import com.flab.foodrun.domain.user.UserAddress;
 import com.flab.foodrun.domain.user.UserStatus;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,28 +22,18 @@ class UserMapperTest {
 	@Autowired
 	private UserMapper userMapper;
 
-	private User user1 = null;
-	private User user2 = null;
-
-	@BeforeEach
-	void initData() {
-		user1 = User.builder()
-			.loginId("test").password("testPassword").name("testName").role(Role.CLIENT)
-			.status(UserStatus.ACTIVE).phoneNumber("01012345678").email("test@gmail.com")
-			.createdBy("testCreatedBy").createdAt(LocalDateTime.now())
-			.build();
-
-		user2 = User.builder()
-			.loginId("test2").password("testPassword2").name("testName2").role(Role.CLIENT)
-			.status(UserStatus.ACTIVE).phoneNumber("01012345671").email("test2@gmail.com")
-			.createdBy("test2CreatedBy").createdAt(LocalDateTime.now())
-			.build();
-	}
+	@Autowired
+	private UserAddressMapper userAddressMapper;
 
 	@Test
 	@DisplayName("User 객체 insert 쿼리 테스트")
 	void insertUser() {
 		//given
+		User user1 = createUserInfo("test", "testPassword", "testName", "01012345678",
+			"test@gmail.com", "testCreatedBy");
+
+		User user2 = createUserInfo("test2", "testPassword2", "testName2", "01012345671",
+			"test2@gmail.com", "test2CreatedBy");
 		int saveCount = 0;
 		//when
 		saveCount += userMapper.insertUser(user1);
@@ -59,6 +50,8 @@ class UserMapperTest {
 	@DisplayName("특정 로그인 아이디를 검색하면 카운트 여부 확인")
 	void countUserId() {
 		//given
+		User user1 = createUserInfo("test", "testPassword", "testName", "01012345678",
+			"test@gmail.com", "testCreatedBy");
 		userMapper.insertUser(user1);
 		//when
 		int userCount = userMapper.countByLoginId("test");
@@ -70,13 +63,16 @@ class UserMapperTest {
 	@DisplayName("id(sequence)로 User 객체 정상적으로 반환되는지 확인")
 	void findById() {
 		//given
+		User user1 = createUserInfo("test", "testPassword", "testName", "01012345678",
+			"test@gmail.com", "testCreatedBy");
+
+		User user2 = createUserInfo("test2", "testPassword2", "testName2", "01012345671",
+			"test2@gmail.com", "test2CreatedBy");
 		userMapper.insertUser(user1);
 		userMapper.insertUser(user2);
 		//when
-		User findUser1 = (userMapper.selectUserById(
-			user1.getId())).orElseThrow();
-		User findUser2 = (userMapper.selectUserById(
-			user2.getId())).orElseThrow();
+		User findUser1 = (userMapper.selectUserById(user1.getId())).orElseThrow();
+		User findUser2 = (userMapper.selectUserById(user2.getId())).orElseThrow();
 		//then
 		assertThat(findUser1.getLoginId()).isEqualTo(user1.getLoginId());
 		assertThat(findUser2.getLoginId()).isEqualTo(user2.getLoginId());
@@ -86,6 +82,8 @@ class UserMapperTest {
 	@DisplayName("loginId로 User 객체 정상적으로 반환되는지 확인")
 	void selectUserByLoginId() {
 		//given
+		User user1 = createUserInfo("test", "testPassword", "testName", "01012345678",
+			"test@gmail.com", "testCreatedBy");
 		userMapper.insertUser(user1);
 		//when
 		User findUser = userMapper.selectUserByLoginId(user1.getLoginId()).orElseThrow();
@@ -98,6 +96,8 @@ class UserMapperTest {
 	@DisplayName("회원 정보 변경 테스트")
 	void updateUserInfo() {
 		//given
+		User user1 = createUserInfo("test", "testPassword", "testName", "01012345678",
+			"test@gmail.com", "testCreatedBy");
 		userMapper.insertUser(user1);
 		User user = userMapper.selectUserById(user1.getId()).orElseThrow();
 		user.setName("modTestName");
@@ -110,5 +110,47 @@ class UserMapperTest {
 		assertThat(count).isEqualTo(1);
 		assertThat(user.getName()).isEqualTo("modTestName");
 		assertThat(user.getEmail()).isEqualTo("mod@gmail.com");
+	}
+
+	@Test
+	@DisplayName("회원 주소 등록 테스트")
+	void insertUserAddress() {
+		//given
+		User user = createUserInfo("dailyzett", "testPassword", "testName", "01012345678",
+			"test@gmail.com", "testCreatedBy");
+		UserAddress userAddress = createUserAddress(user.getLoginId());
+
+		//when
+		userMapper.insertUser(user);
+		userAddressMapper.insertUserAddress(userAddress);
+		UserAddress address = userAddressMapper.selectUserAddressByLoginId(user.getLoginId())
+			.orElseThrow();
+
+		//then
+		assertThat(address.getLoginId()).isEqualTo(user.getLoginId());
+		assertThat(address.getStreetAddress()).isEqualTo(userAddress.getStreetAddress());
+		assertThat(address.getDetailAddress()).isEqualTo(userAddress.getDetailAddress());
+		assertThat(address.getLatitude()).isEqualTo(userAddress.getLatitude());
+		assertThat(address.getLongitude()).isEqualTo(userAddress.getLongitude());
+	}
+
+	private UserAddress createUserAddress(String loginId) {
+		return UserAddress.builder()
+			.loginId(loginId)
+			.streetAddress("서울시 관악구")
+			.detailAddress("377-10 307호")
+			.latitude(BigDecimal.valueOf(37.62038101721312))
+			.longitude(BigDecimal.valueOf(127.00402114592025))
+			.createdBy(loginId)
+			.createdAt(LocalDateTime.now())
+			.build();
+	}
+
+	private User createUserInfo(String loginId, String testPassword, String testName,
+		String phoneNumber, String email, String testCreatedBy) {
+		return User.builder().loginId(loginId).password(testPassword).name(testName)
+			.role(Role.CLIENT)
+			.status(UserStatus.ACTIVE).phoneNumber(phoneNumber).email(email)
+			.createdBy(testCreatedBy).createdAt(LocalDateTime.now()).build();
 	}
 }

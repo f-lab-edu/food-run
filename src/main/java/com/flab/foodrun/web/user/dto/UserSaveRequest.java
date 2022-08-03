@@ -30,9 +30,6 @@ public class UserSaveRequest {
 	@NotNull(message = "{role.notNull}")
 	private Role role;
 
-	@NotNull(message = "{status.notNull}")
-	private UserStatus status;
-
 	@NotBlank(message = "{phoneNumber.notBlank}")
 	private String phoneNumber;
 
@@ -40,29 +37,21 @@ public class UserSaveRequest {
 	@NotBlank(message = "{email.notBlank}")
 	private String email;
 
-	@NotBlank(message = "{streetAddress.notBlank}")
-	private String streetAddress;
-
-	@NotBlank(message = "{detailAddress.notBlank}")
-	private String detailAddress;
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
 	public User toEntity() {
 		return User.builder()
-			.loginId(this.getLoginId())
-			.password(this.getPassword())
-			.name(this.getName())
-			.role(this.getRole())
-			.status(this.getStatus())
-			.phoneNumber(this.getPhoneNumber())
-			.email(this.getEmail())
-			.streetAddress(this.getStreetAddress())
-			.detailAddress(this.getDetailAddress())
+			.loginId(loginId)
+			.password(password)
+			.name(name)
+			.role(role)
+			.status(UserStatus.ACTIVE)
+			.phoneNumber(phoneNumber)
+			.email(email)
 			.createdAt(LocalDateTime.now())
-			.createdBy(this.getName())
+			.createdBy(loginId)
 			.build();
 	}
 }

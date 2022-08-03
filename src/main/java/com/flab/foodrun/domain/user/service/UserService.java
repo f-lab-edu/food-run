@@ -7,7 +7,6 @@ import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
 import com.flab.foodrun.web.user.dto.UserModifyRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @Transactional : 적용된 범위에서 트랜잭션 기능이 포함된 프록시 객체가 생성, 자동으로 커밋 혹은 롤백 진행
  */
 
-@Slf4j
 @Service
 @RequiredArgsConstructor // final 필드에 대해 자동으로 생성자를 만들어주는 애노테이션
 @Transactional
@@ -30,9 +28,10 @@ public class UserService {
 		if (userMapper.countByLoginId(userSaveRequest.getLoginId()) > 0) {
 			throw new DuplicatedUserIdException();
 		}
+
 		userSaveRequest.setPassword(passwordEncoder.encode(userSaveRequest.getPassword()));
 		User user = userSaveRequest.toEntity();
-		log.info("addUser:{}", user);
+
 		userMapper.insertUser(user);
 		return user;
 	}

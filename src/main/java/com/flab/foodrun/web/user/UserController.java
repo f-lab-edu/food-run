@@ -1,7 +1,11 @@
 package com.flab.foodrun.web.user;
 
 import com.flab.foodrun.domain.user.User;
+import com.flab.foodrun.domain.user.UserAddress;
+import com.flab.foodrun.domain.user.service.UserAddressService;
 import com.flab.foodrun.domain.user.service.UserService;
+import com.flab.foodrun.web.user.dto.UserAddressSaveRequest;
+import com.flab.foodrun.web.user.dto.UserAddressSaveResponse;
 import com.flab.foodrun.web.user.dto.UserInfoResponse;
 import com.flab.foodrun.web.user.dto.UserModifyRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	private final UserService userService;
+	private final UserAddressService userAddressService;
 
 	@PostMapping
 	public ResponseEntity<UserSaveResponse> addUser(
@@ -51,5 +56,14 @@ public class UserController {
 
 		User user = userService.modifyUser(userModifyRequest);
 		return new ResponseEntity<>(UserInfoResponse.from(user), HttpStatus.OK);
+	}
+
+	@PostMapping("/{id}/addresses")
+	public ResponseEntity<UserAddressSaveResponse> addUserAddress(
+		@PathVariable Long id,
+		@Validated @RequestBody UserAddressSaveRequest userAddressSaveRequest) {
+
+		UserAddress userAddress = userAddressService.addUserAddress(id, userAddressSaveRequest);
+		return new ResponseEntity<>(UserAddressSaveResponse.from(userAddress), HttpStatus.CREATED);
 	}
 }

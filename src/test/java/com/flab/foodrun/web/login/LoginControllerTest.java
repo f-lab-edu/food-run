@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.foodrun.domain.login.service.LoginService;
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
-import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.service.UserService;
 import com.flab.foodrun.web.login.dto.LoginRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
@@ -58,11 +57,9 @@ class LoginControllerTest {
 			.password("testPassword")
 			.name("testName")
 			.role(Role.CLIENT)
-			.status(UserStatus.ACTIVE)
 			.phoneNumber("01012345678")
 			.email("test@gmail.com")
-			.streetAddress("testStreetAddress")
-			.detailAddress("testDetailAddress").build();
+			.build();
 	}
 
 	@Test

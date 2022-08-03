@@ -11,7 +11,6 @@ import static org.mockito.Mockito.when;
 
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
-import com.flab.foodrun.domain.user.UserStatus;
 import com.flab.foodrun.domain.user.dao.UserMapper;
 import com.flab.foodrun.domain.user.exception.DuplicatedUserIdException;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
@@ -55,14 +54,14 @@ class UserServiceTest {
 
 		formList = Arrays.asList(
 			UserSaveRequest.builder().loginId("testId1").password("test-password").name("testName")
-				.role(Role.CLIENT).status(UserStatus.ACTIVE)
+				.role(Role.CLIENT)
 				.phoneNumber("01012345779").email("test1@gmail.com")
-				.streetAddress("testStreetAddress1").detailAddress("testDetailAddress").build(),
+				.build(),
 
 			UserSaveRequest.builder().loginId("testId2").password("test-password").name("testName")
-				.role(Role.CLIENT).status(UserStatus.ACTIVE)
+				.role(Role.CLIENT)
 				.phoneNumber("01012345779").email("test1@gmail.com")
-				.streetAddress("testStreetAddress1").detailAddress("testDetailAddress").build());
+				.build());
 	}
 
 	@Test
