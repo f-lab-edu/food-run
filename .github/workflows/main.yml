@@ -32,9 +32,11 @@ jobs:
 
       - name: Test
         env:
+          TEST_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TEST_KEY: ${{ secrets.TEST_KEY }}
         run: |
           echo ${#TEST_KEY}
+          echo ${#TEST_GITHUB_TOKEN}
 
       - name: Build with Gradle
         env:
