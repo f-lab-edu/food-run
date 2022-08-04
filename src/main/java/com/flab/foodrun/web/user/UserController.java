@@ -24,12 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 로깅에 대한 추상 레이어를 제공하는 인터페이스 모음 애노테이션 인터페이스를 사용하면 나중에 로깅 라이브러리를 변경해도 코드의 변경 없이 실행 가능
+ * @Slf4j 로깅에 대한 추상 레이어를 제공하는 인터페이스 모음 애노테이션 인터페이스를 사용하면 나중에 로깅 라이브러리를 변경해도 코드의 변경 없이 실행 가능
+ * @RestController @Controller + @ResponseBody
+ * @RequiredArgsConstructor final 필드에 대해 자동으로 생성자를 만들어주는 롬복 애노테이션
  */
 @Slf4j
 @RequestMapping("/users")
-@RestController //@Controller + @ResponseBody
-@RequiredArgsConstructor // final 필드에 대해 자동으로 생성자를 만들어주는 애노테이션
+@RestController
+@RequiredArgsConstructor
 public class UserController {
 
 	private final UserService userService;
