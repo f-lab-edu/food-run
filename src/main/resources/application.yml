@@ -1,6 +1,4 @@
 spring:
-  profiles:
-    active: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db?characterEncoding=utf8
@@ -20,10 +18,10 @@ spring:
   session:
     store-type: redis
 
-  redis:
-    host: localhost
-    port: 6379
-    password:
+#  redis:
+#    host: localhost
+#    port: 6379
+#    password:
 
 # MyBatis Config
 mybatis:
