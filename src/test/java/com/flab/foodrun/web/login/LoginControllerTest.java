@@ -45,7 +45,6 @@ class LoginControllerTest {
 	@Autowired
 	UserService userService;
 
-	MockHttpSession mockSession = new MockHttpSession();
 	UserSaveRequest userSaveRequest = null;
 	ObjectMapper objectMapper = new ObjectMapper();
 
@@ -66,16 +65,17 @@ class LoginControllerTest {
 	@DisplayName("로그인 테스트 : 성공")
 	void loginSuccessTest() throws Exception {
 		//given
+		MockHttpSession session = new MockHttpSession();
 		userService.addUser(userSaveRequest);
 		userService.findUser(userSaveRequest.getLoginId());
-		LoginRequest loginForm = new LoginRequest(userSaveRequest.getLoginId(),
+		LoginRequest loginRequest = new LoginRequest(userSaveRequest.getLoginId(),
 			"testPassword");
 		//when
-		User loginUser = loginService.login(loginForm.getLoginId(), loginForm.getPassword());
+		User loginUser = loginService.login(loginRequest, session);
 		mockMvc.perform(post("/login")
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(loginForm)))
+				.content(objectMapper.writeValueAsString(loginRequest)))
 			//then
 			.andExpect(jsonPath("$.loginId").value(loginUser.getLoginId()))
 			.andExpect(jsonPath("$.name").value(loginUser.getName()))
@@ -87,7 +87,6 @@ class LoginControllerTest {
 	@DisplayName("POST: 아이디를 못찾을 때")
 	void postNotFoundId() throws Exception {
 		//given
-		User user = userService.addUser(userSaveRequest);
 		LoginRequest loginForm = new LoginRequest("invalid,", "invalid");
 		//when
 		mockMvc.perform(post("/login")
