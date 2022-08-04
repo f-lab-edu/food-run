@@ -34,6 +34,15 @@ spring:
   messages:
     basename: errors
 
+  # redis
+  session:
+    store-type: redis
+
+  redis:
+    host: localhost
+    password:
+    port: 6379
+
 # MyBatis Config
 
 mybatis:
