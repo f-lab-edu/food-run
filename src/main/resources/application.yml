@@ -1,23 +1,6 @@
-# DB Connection Configuration
-
-# flyway + h2
-# 클라우드 사용으로 인한 주석 처리
-
-#spring:
-#  datasource:
-#    url: jdbc:h2:tcp://localhost/~/devdb
-#    username: sa
-#    password:
-#    driver-class-name: org.h2.Driver
-#  flyway:
-#    baseline-version: 1
-#    enabled: true
-#    encoding: utf-8
-#    baseline-on-migrate: true
-
-# NCP - cloud for mysql
-
 spring:
+  profiles:
+    active: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db?characterEncoding=utf8
@@ -30,7 +13,6 @@ spring:
       mode: always
 
   # message properties 불러오기 설정
-
   messages:
     basename: errors
 
@@ -40,19 +22,16 @@ spring:
 
   redis:
     host: localhost
-    password:
     port: 6379
+    password:
 
 # MyBatis Config
-
 mybatis:
   mapper-locations: classpath:mybatis/mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
 
-
 # Naver Map API
-
 naver:
   client:
     id: btbjp58exr
@@ -75,7 +54,7 @@ resilience4j.circuitbreaker:
       automaticTransitionFromOpenToHalfOpenEnabled: true
       maxWaitDurationInHalfOpenState: 1000
       waitDurationInOpenState: 10000
-
   instances:
     naverMapCircuitBreaker:
       baseConfig: default
+
