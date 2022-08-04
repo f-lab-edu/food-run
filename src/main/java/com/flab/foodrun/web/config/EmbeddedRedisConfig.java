@@ -9,16 +9,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.test.context.ActiveProfiles;
 import redis.embedded.RedisServer;
 
 /**
  * @Slf4j 로깅에 대한 추상 레이어를 제공하는 인터페이스 모음
- * @Profile 환경에 따라 외부 설정 파일을 통해 관리하기 위해 사용하는 어노테이션
+ * @ActiveProfiles 테스트 클래스에 대한 ApplicationContext를 로드할 때 사용하는 클래스 레벨 어노테이션
  * @Configuration @Bean을 정의한 메서드가 있음을 나타내는 어노테이션
  */
 @Slf4j
-@Profile("local")
+@ActiveProfiles("test")
 @Configuration
 public class EmbeddedRedisConfig {
 
@@ -30,6 +30,7 @@ public class EmbeddedRedisConfig {
 	@PostConstruct
 	public void redisServer() throws IOException {
 		int port = isRedisRunning() ? findAvailablePort() : redisPort;
+		log.info("current redis port={}", port);
 		redisServer = new RedisServer(port);
 		redisServer.start();
 	}
@@ -52,19 +53,18 @@ public class EmbeddedRedisConfig {
 				return port;
 			}
 		}
-
 		throw new IllegalArgumentException("Not Found Available port: 10000 ~ 65535");
 	}
 
 	/**
-	 * Embedde Redis가 현재 실행중인지 확인
+	 * Embedded Redis가 현재 실행중인지 확인
 	 */
 	private boolean isRedisRunning() throws IOException {
 		return isRunning(executeGrepProcessCommand(redisPort));
 	}
 
 	/**
-	 * 해당 port를 사용중인 프로세스 확인하는 sh 실행
+	 * 해당 port를 사용중인 프로세스 확인하는 sh 실행(윈도우 환경일 때)
 	 */
 	private Process executeGrepProcessCommand(int port) throws IOException {
 		String command = String.format("netstat -nao | find \"LISTEN\" | find \"%d\"", port);
