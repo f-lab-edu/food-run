@@ -1,9 +1,15 @@
 package com.flab.foodrun.domain.login.service;
 
+import com.flab.foodrun.domain.login.exception.DuplicatedLoginSessionException;
 import com.flab.foodrun.domain.login.exception.InvalidPasswordException;
 import com.flab.foodrun.domain.login.exception.LoginIdNotFoundException;
+import com.flab.foodrun.domain.login.exception.NotFoundLoginSessionException;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.dao.UserMapper;
+import com.flab.foodrun.web.SessionConst;
+import com.flab.foodrun.web.login.dto.LoginRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,19 +28,32 @@ public class LoginService {
 	private final UserMapper userMapper;
 	private final PasswordEncoder passwordEncoder;
 
-	public User login(String loginId, String inputPassword) {
-		User user = userMapper.selectUserByLoginId(loginId)
+	public User login(LoginRequest loginRequest, @NotNull HttpSession session) {
+		if (loginRequest.getLoginId().equals(session.getAttribute(SessionConst.LOGIN_SESSION))) {
+			throw new DuplicatedLoginSessionException();
+		}
+
+		User user = userMapper.selectUserByLoginId(loginRequest.getLoginId())
 			.orElseThrow(LoginIdNotFoundException::new);
 
-		log.info("inputPassword:{}, userPassword:{}", inputPassword, user.getPassword());
-		if (isCheckedPassword(inputPassword, user.getPassword())) {
-			return user;
+		if (isCheckedPassword(loginRequest.getPassword(), user.getPassword())) {
+			session.setAttribute(SessionConst.LOGIN_SESSION, loginRequest.getLoginId());
 		} else {
 			throw new InvalidPasswordException();
 		}
+
+		return user;
 	}
 
 	private boolean isCheckedPassword(String password, String foundUserPassword) {
 		return passwordEncoder.matches(password, foundUserPassword);
+	}
+
+	public void logout(@NotNull HttpSession session) {
+		if (session.getAttribute(SessionConst.LOGIN_SESSION) != null) {
+			session.invalidate();
+		} else {
+			throw new NotFoundLoginSessionException();
+		}
 	}
 }
