@@ -1,10 +1,13 @@
 package com.flab.foodrun.web.login;
 
+import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.DUPLICATED_LOGIN_SESSION_EX_MESSAGE;
 import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.INVALID_PASSWORD_EX_MESSAGE;
 import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.LOGIN_ID_NOT_FOUND_EX_MESSAGE;
+import static com.flab.foodrun.web.exceptionhandler.advice.WebExceptionControllerAdvice.NOT_FOUND_LOGIN_SESSION_EX_MESSAGE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flab.foodrun.domain.login.service.LoginService;
@@ -13,7 +16,6 @@ import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.service.UserService;
 import com.flab.foodrun.web.login.dto.LoginRequest;
 import com.flab.foodrun.web.user.dto.UserSaveRequest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,42 +47,53 @@ class LoginControllerTest {
 	@Autowired
 	UserService userService;
 
-	UserSaveRequest userSaveRequest = null;
 	ObjectMapper objectMapper = new ObjectMapper();
-
-	@BeforeEach
-	void init() {
-		/*로그인 테스트용 아이디 가입*/
-		userSaveRequest = UserSaveRequest.builder()
-			.loginId("loginServiceTestId")
-			.password("testPassword")
-			.name("testName")
-			.role(Role.CLIENT)
-			.phoneNumber("01012345678")
-			.email("test@gmail.com")
-			.build();
-	}
 
 	@Test
 	@DisplayName("로그인 테스트 : 성공")
 	void loginSuccessTest() throws Exception {
 		//given
-		MockHttpSession session = new MockHttpSession();
+		UserSaveRequest userSaveRequest = createUserInfo();
 		userService.addUser(userSaveRequest);
-		userService.findUser(userSaveRequest.getLoginId());
 		LoginRequest loginRequest = new LoginRequest(userSaveRequest.getLoginId(),
 			"testPassword");
 		//when
-		User loginUser = loginService.login(loginRequest, session);
 		mockMvc.perform(post("/login")
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(loginRequest)))
 			//then
-			.andExpect(jsonPath("$.loginId").value(loginUser.getLoginId()))
-			.andExpect(jsonPath("$.name").value(loginUser.getName()))
-			.andExpect(jsonPath("$.phoneNumber").value(loginUser.getPhoneNumber()))
+			.andExpect(jsonPath("$.loginId").value(userSaveRequest.getLoginId()))
+			.andExpect(jsonPath("$.name").value(userSaveRequest.getName()))
+			.andExpect(jsonPath("$.phoneNumber").value(userSaveRequest.getPhoneNumber()))
 		;
+	}
+
+	@Test
+	@DisplayName("중복 로그인 테스트")
+	void duplicatedLogin() throws Exception {
+		//given
+		UserSaveRequest userSaveRequest = createUserInfo();
+		userService.addUser(userSaveRequest);
+		LoginRequest loginRequest = new LoginRequest(userSaveRequest.getLoginId(),
+			"testPassword");
+
+		String content = objectMapper.writeValueAsString(loginRequest);
+		MockHttpSession session = new MockHttpSession();
+
+		//when
+		mockMvc.perform(post("/login").content(content).session(session)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk());
+
+		//then
+		mockMvc.perform(post("/login").content(content).session(session)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.code").value("DuplicatedLoginSessionException"))
+			.andExpect(jsonPath("$.message").value(DUPLICATED_LOGIN_SESSION_EX_MESSAGE));
 	}
 
 	@Test
@@ -103,6 +116,7 @@ class LoginControllerTest {
 	@DisplayName("POST: 비밀번호를 못찾을 때")
 	void postNotFoundPassword() throws Exception {
 		//given
+		UserSaveRequest userSaveRequest = createUserInfo();
 		User user = userService.addUser(userSaveRequest);
 		LoginRequest loginForm = new LoginRequest(user.getLoginId(), "invalid");
 		//when
@@ -114,5 +128,52 @@ class LoginControllerTest {
 			.andDo(print())
 			.andExpect(jsonPath("$.code").value("InvalidPasswordException"))
 			.andExpect(jsonPath("$.message").value(INVALID_PASSWORD_EX_MESSAGE));
+	}
+
+	@Test
+	@DisplayName("POST 로그아웃")
+	void logout() throws Exception {
+		//given
+		UserSaveRequest userSaveRequest = createUserInfo();
+		MockHttpSession session = new MockHttpSession();
+		userService.addUser(userSaveRequest);
+		LoginRequest loginRequest = new LoginRequest(userSaveRequest.getLoginId(),
+			"testPassword");
+
+		loginService.login(loginRequest, session);
+
+		//when
+		mockMvc.perform(post("/logout").session(session)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON))
+			//then
+			.andExpect(status().isOk());
+	}
+
+	@Test
+	@DisplayName("POST 로그아웃: 세션을 찾을 수 없을 때")
+	void logoutNotFoundSession() throws Exception {
+		//given
+		MockHttpSession session = new MockHttpSession();
+
+		//when
+		mockMvc.perform(post("/logout").session(session)
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON))
+			//then
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.code").value("NotFoundLoginSessionException"))
+			.andExpect(jsonPath("$.message").value(NOT_FOUND_LOGIN_SESSION_EX_MESSAGE));
+	}
+
+	private UserSaveRequest createUserInfo() {
+		return UserSaveRequest.builder()
+			.loginId("loginServiceTestId")
+			.password("testPassword")
+			.name("testName")
+			.role(Role.CLIENT)
+			.phoneNumber("01012345678")
+			.email("test@gmail.com")
+			.build();
 	}
 }
