@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.flab.foodrun.domain.login.exception.DuplicatedLoginSessionException;
 import com.flab.foodrun.domain.login.exception.InvalidPasswordException;
 import com.flab.foodrun.domain.login.exception.LoginIdNotFoundException;
+import com.flab.foodrun.domain.login.exception.NotFoundLoginSessionException;
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.UserStatus;
@@ -118,6 +119,19 @@ class LoginServiceTest {
 
 		//then
 		assertThat(session.isInvalid()).isTrue();
+	}
+
+	@Test
+	@DisplayName("로그아웃했을 때 세션 정보를 찾을 수 없는 경우")
+	void logoutNotFoundSession() {
+		//given
+		MockHttpSession invalidSession = new MockHttpSession();
+
+		//when
+		assertThatThrownBy(() -> {
+			//then
+			loginService.logout(invalidSession);
+		}).isInstanceOf(NotFoundLoginSessionException.class);
 	}
 
 	private UserSaveRequest createUserInfo() {
