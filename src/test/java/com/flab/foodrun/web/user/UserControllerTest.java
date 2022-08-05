@@ -10,10 +10,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flab.foodrun.domain.login.service.LoginService;
 import com.flab.foodrun.domain.user.Role;
 import com.flab.foodrun.domain.user.User;
 import com.flab.foodrun.domain.user.service.UserService;
 import com.flab.foodrun.web.SessionConst;
+import com.flab.foodrun.web.login.dto.LoginRequest;
 import com.flab.foodrun.web.user.dto.UserAddressSaveRequest;
 import com.flab.foodrun.web.user.dto.UserAddressSaveResponse;
 import com.flab.foodrun.web.user.dto.UserModifyRequest;
@@ -26,18 +28,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 
 /**
- * @SpringBootTest : 스프링 부트 기반 테스트를 실행하는 테스트 클래스에 지정할 수 있는 주석.
- * @AutoConfigureMockMvc : 컨트롤러 테스트 할 때, 서블릿 컨테이너에 대한 목 객체 생성 또한 @Service, @Repository 가 붙은 모든 클래스들을
- * 메모리에 적재
- * @Transactional : 적용된 범위에서 트랜잭션 기능이 포함된 프록시 객체가 생성, 자동으로 커밋 혹은 롤백 진행
+ * @SpringBootTest 스프링 부트 기반 테스트를 실행하는 테스트 클래스에 지정할 수 있는 주석.
+ * @AutoConfigureMockMvc 컨트롤러 테스트 할 때 서블릿 컨테이너에 대한 목 객체 생성
+ * @SpringJUnitWebConfig @ExtendWith, @ContextConfiguration, @WebAppConfiguration이 결합된 어노테이션
+ * @Transactional 적용된 범위에서 트랜잭션 기능이 포함된 프록시 객체가 생성, 자동으로 커밋 혹은 롤백 진행
  */
+
 @SpringBootTest
 @AutoConfigureMockMvc
+@SpringJUnitWebConfig
 @Transactional
 class UserControllerTest {
 
@@ -46,6 +51,12 @@ class UserControllerTest {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	LoginService loginService;
+
+	@Autowired
+	MockHttpSession session;
 
 	ObjectMapper mapper = new ObjectMapper();
 
@@ -116,19 +127,22 @@ class UserControllerTest {
 	void findUserId() throws Exception {
 		//given
 		UserSaveRequest userSaveRequest = createUserInfo();
-		userService.addUser(userSaveRequest);
-		MockHttpSession session = new MockHttpSession();
-		session.setAttribute(SessionConst.LOGIN_SESSION, userSaveRequest.getLoginId());
+		User user = userService.addUser(userSaveRequest);
+
+		LoginRequest loginRequest = new LoginRequest(user.getLoginId(), "testPassword");
+
+		User loginUser = loginService.login(loginRequest, session);
 
 		//when
-		mvc.perform(get("/users/" + userSaveRequest.getLoginId()).session(session))
-
+		mvc.perform(get("/users/" + loginUser.getLoginId())
+				.session(session))
 			//then
-			.andExpect(jsonPath("$.loginId").value(userSaveRequest.getLoginId()))
-			.andExpect(jsonPath("$.name").value(userSaveRequest.getName()))
-			.andExpect(jsonPath("$.role").value(String.valueOf(userSaveRequest.getRole())))
-			.andExpect(jsonPath("$.phoneNumber").value(userSaveRequest.getPhoneNumber()))
-			.andExpect(jsonPath("$.email").value(userSaveRequest.getEmail())).andDo(print());
+			.andDo(print())
+			.andExpect(jsonPath("$.loginId").value(loginUser.getLoginId()))
+			.andExpect(jsonPath("$.name").value(loginUser.getName()))
+			.andExpect(jsonPath("$.role").value(String.valueOf(loginUser.getRole())))
+			.andExpect(jsonPath("$.phoneNumber").value(loginUser.getPhoneNumber()))
+			.andExpect(jsonPath("$.email").value(loginUser.getEmail()));
 	}
 
 	@Test
@@ -145,7 +159,6 @@ class UserControllerTest {
 			.loginId(userSaveRequest.getLoginId()).name("test-modify-name")
 			.email("modify@gmail.com").phoneNumber("010-2222-2222").build();
 
-		MockHttpSession session = new MockHttpSession();
 		session.setAttribute(SessionConst.LOGIN_SESSION, userSaveRequest.getLoginId());
 
 		//when
