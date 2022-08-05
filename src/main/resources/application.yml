@@ -18,10 +18,12 @@ spring:
   session:
     store-type: redis
 
-#  redis:
-#    host: localhost
-#    port: 6379
-#    password:
+  redis:
+    host: localhost
+    port: 6379
+    password:
+  profiles:
+    active: local
 
 # MyBatis Config
 mybatis:
@@ -55,4 +57,3 @@ resilience4j.circuitbreaker:
   instances:
     naverMapCircuitBreaker:
       baseConfig: default
-

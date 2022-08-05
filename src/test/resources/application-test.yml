@@ -5,7 +5,3 @@ naver:
     host: http://localhost:${wiremock.server.port}
     url: /map-geocode/v2/geocode
 
-spring:
-  redis:
-    host: localhost
-    port: 6379
