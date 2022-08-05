@@ -31,4 +31,10 @@ public class LoginController {
 		User loginUser = loginService.login(loginRequest, session);
 		return new ResponseEntity<>(LoginResponse.from(loginUser), HttpStatus.OK);
 	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<Void> logout(@NotNull HttpSession session) {
+		loginService.logout(session);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }
