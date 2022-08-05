@@ -1,0 +1,61 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://db-ajvuv.pub-cdb.ntruss.com:3306/foodrun_db?characterEncoding=utf8
+    username: mysql_dba
+    password: ${DATASOURCE_PASSWORD}
+
+  # 항상 SQL 데이터베이스를 초기화
+  sql:
+    init:
+      mode: always
+
+  # message properties 불러오기 설정
+  messages:
+    basename: errors
+
+  # 테스트할 때는 redis session 사용 X (MockHttpSession 동작을 위해)
+  redis:
+    host: localhost
+    port: 6379
+    password:
+  data:
+    redis:
+      repositories:
+        enabled: false
+  session:
+    store-type: none
+
+# MyBatis Config
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+# Naver Map API
+naver:
+  client:
+    id: btbjp58exr
+    secret: ${NAVER_SECRET}
+    host: https://naveropenapi.apigw.ntruss.com
+    url: /map-geocode/v2/geocode
+
+# resilience4j
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      slidingWindowType: COUNT_BASED
+      minimumNumberOfCalls: 5
+      failureRateThreshold: 50
+      slowCallRateThreshold: 100
+      slowCallDurationThreshold: 60000
+      permittedNumberOfCallsInHalfOpenState: 3
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+      maxWaitDurationInHalfOpenState: 1000
+      waitDurationInOpenState: 10000
+  instances:
+    naverMapCircuitBreaker:
+      baseConfig: default
+
