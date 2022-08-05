@@ -9,16 +9,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.context.annotation.Profile;
 import redis.embedded.RedisServer;
 
 /**
  * @Slf4j 로깅에 대한 추상 레이어를 제공하는 인터페이스 모음
- * @ActiveProfiles 테스트 클래스에 대한 ApplicationContext를 로드할 때 사용하는 클래스 레벨 어노테이션
+ * @Profile 하나 이상의 지정된 profile.active 설정을 가져온다.
  * @Configuration @Bean을 정의한 메서드가 있음을 나타내는 어노테이션
  */
 @Slf4j
-@ActiveProfiles("test")
+@Profile("local")
 @Configuration
 public class EmbeddedRedisConfig {
 
