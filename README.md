@@ -48,3 +48,9 @@
 - [ERD 원본 - diagram.io](https://dbdiagram.io/d/627e692a7f945876b61451b4)
 
 ![](ERD.png)
+
+## 기술 이슈 및 해결 과정
+
+- [UserService 테스트의 Mock 객체를 이용한 단위 테스트 작성](https://velog.io/@dailyzett/%EB%8B%A8%EC%9C%84-%ED%85%8C%EC%8A%A4%ED%8A%B8)
+- [네이버 맵 API 적용 및 서킷 브레이커 패턴 적용](https://github.com/f-lab-edu/food-run/pull/27)
+- [GitHub Actions CI 적용](https://github.com/f-lab-edu/food-run/pull/19)
