@@ -43,7 +43,7 @@ public class EmbeddedRedisConfig {
 	}
 
 	/**
-	 * 현재 PC/서버에서 사용가능한 포트 조회
+	 * 현재 PC에서 사용가능한 포트 조회
 	 */
 	public int findAvailablePort() throws IOException {
 
