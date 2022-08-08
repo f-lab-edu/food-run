@@ -14,16 +14,17 @@ spring:
   messages:
     basename: errors
 
-  # redis
-  session:
-    store-type: redis
-
+  # 테스트할 때는 redis session 사용 X (MockHttpSession 동작을 위해)
   redis:
     host: localhost
-    port: 6380
+    port: 6379
     password:
-  profiles:
-    active: local
+  data:
+    redis:
+      repositories:
+        enabled: false
+  session:
+    store-type: none
 
 # MyBatis Config
 mybatis:
@@ -57,3 +58,4 @@ resilience4j.circuitbreaker:
   instances:
     naverMapCircuitBreaker:
       baseConfig: default
+
