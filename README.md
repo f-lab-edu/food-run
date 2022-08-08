@@ -27,7 +27,7 @@
 - Slack
 
 
-## 개발 규칙
+## 개발 규칙7
 
 - [Java Coding Convention](https://github.com/f-lab-edu/food-run/wiki/3.Convention#java-coding-convention)
 - [Git Branch 전략](https://github.com/f-lab-edu/food-run/wiki/3.Convention#git-branch-%EC%A0%84%EB%9E%B5)
@@ -54,3 +54,4 @@
 - [UserService 테스트의 Mock 객체를 이용한 단위 테스트 작성](https://velog.io/@dailyzett/%EB%8B%A8%EC%9C%84-%ED%85%8C%EC%8A%A4%ED%8A%B8)
 - [네이버 맵 API 적용 및 서킷 브레이커 패턴 적용](https://github.com/f-lab-edu/food-run/pull/27)
 - [GitHub Actions CI 적용](https://github.com/f-lab-edu/food-run/pull/19)
+- [Redis 세션 스토리지 적용](https://github.com/f-lab-edu/food-run/pull/32)
