@@ -27,7 +27,7 @@
 - Slack
 
 
-## 개발 규칙7
+## 개발 규칙
 
 - [Java Coding Convention](https://github.com/f-lab-edu/food-run/wiki/3.Convention#java-coding-convention)
 - [Git Branch 전략](https://github.com/f-lab-edu/food-run/wiki/3.Convention#git-branch-%EC%A0%84%EB%9E%B5)
